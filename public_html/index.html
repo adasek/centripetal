@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Centripetal game</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="icon" href="#">
+
+        <style type="text/css">
+            html,body {margin:0;
+                       padding:0;
+                       overflow: hidden;
+                       background-color:#aaaaaa;
+            }
+
+            canvas#gameArea {
+                border: 5px solid black;
+                margin:0;
+                background-color:white;
+            }
+
+        </style>
+
+        <script type="text/javascript" src="class/display.js"></script>
+        <script type="text/javascript" src="class/displayobject.js"></script>
+        <script type="text/javascript" src="class/ball.js"></script>
+
+    </head>
+    <body>
+        <canvas id="gameArea"></canvas>
+
+        <script type="text/javascript">
+            display = new Display();
+            display.resize();
+
+            window.onresize = display.resize.bind(display);
+
+            var test=new Ball(0.1,-1,0.5,0.5);
+            display.displayObjects.push(test);
+
+            function newFrame() {
+                display.render();
+                window.requestAnimationFrame(newFrame);
+            }
+
+            newFrame();
+
+        </script>
+    </body>
+</html>
