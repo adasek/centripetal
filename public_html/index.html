@@ -45,10 +45,15 @@
             var boxA = Bodies.rectangle(400, 200, 10, 10);
             Matter.Body.setStatic(boxA, true);
 
-            var ground = Bodies.rectangle(400, 610, 810, 60, {isStatic: true});
+            //Rope
+            //Matter.Body.applyForce(player.body, Matter.Vector.create(0, 0), Matter.Vector.create(0, -1));
 
             // add all of the bodies to the world
-            World.add(engine.world, [boxA, player.body, ground]);
+            World.add(engine.world, [boxA, player.body]);
+
+
+
+
 
             var renderOptions = engine.render.options;
             renderOptions.wireframes = false;
@@ -72,6 +77,24 @@
 
 // run the engine
             Engine.run(engine);
+
+
+            hooked = false;
+            rope = null;
+            document.body.onkeyup = function (e) {
+                if (e.keyCode === 32) {
+                    if (!hooked) {
+                         rope = Matter.Constraint.create({bodyA: player.body, bodyB: boxA});
+                        player.body.onRopeGravity = 1;
+                        World.add(engine.world, rope);
+                        hooked = true;
+                    } else {
+                        World.remove(engine.world, rope);
+                        player.body.onRopeGravity = 0;
+                        hooked = false;
+                    }
+                }
+            };
 
         </script>
     </body>
