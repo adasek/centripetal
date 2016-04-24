@@ -1,13 +1,13 @@
 {
-    "name": "Centripetal",
-    "version": "1.0.0",
-    "main": "path/to/main.css",
-    "ignore": [
-        ".jshintrc",
-        "**/*.txt"
-    ],
-    "dependencies": {
-    },
-    "devDependencies": {
-    }
+  "name": "Centripetal",
+  "version": "1.0.0",
+  "main": "path/to/main.css",
+  "ignore": [
+    ".jshintrc",
+    "**/*.txt"
+  ],
+  "dependencies": {"matter-js": "0.9.3",
+    "Matter": "matter-js#0.9.3"
+  },
+  "devDependencies": {}
 }

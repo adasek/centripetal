@@ -14,37 +14,64 @@
                        background-color:#aaaaaa;
             }
 
-            canvas#gameArea {
-                border: 5px solid black;
-                margin:0;
-                background-color:white;
-            }
 
         </style>
 
-        <script type="text/javascript" src="class/display.js"></script>
-        <script type="text/javascript" src="class/displayobject.js"></script>
+        <script type="text/javascript" src="bower_components/Matter/build/matter.js"></script>
+
         <script type="text/javascript" src="class/ball.js"></script>
 
     </head>
     <body>
-        <canvas id="gameArea"></canvas>
 
         <script type="text/javascript">
-            display = new Display();
-            display.resize();
+            // Matter.js module aliases
+            var Engine = Matter.Engine,
+                    World = Matter.World,
+                    Bodies = Matter.Bodies;
 
-            window.onresize = display.resize.bind(display);
+            // create a Matter.js engine
+            var engine = Engine.create(document.body, {
+                render: {
+                    options: {
+                        width: 1024,
+                        height: 1024
+                    }
+                }
+            });
 
-            var test=new Ball(0.1,-1,0.5,0.5);
-            display.displayObjects.push(test);
+            var player = new Ball(0, 0, 50);
 
-            function newFrame() {
-                display.render();
-                window.requestAnimationFrame(newFrame);
-            }
+            var boxA = Bodies.rectangle(400, 200, 10, 10);
+            Matter.Body.setStatic(boxA, true);
 
-            newFrame();
+            var ground = Bodies.rectangle(400, 610, 810, 60, {isStatic: true});
+
+            // add all of the bodies to the world
+            World.add(engine.world, [boxA, player.body, ground]);
+
+            var renderOptions = engine.render.options;
+            renderOptions.wireframes = false;
+            renderOptions.showAngleIndicator = false;
+
+            window.onresize = function () {
+                var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+                var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+                //always fill screen with respecting aspectRatio
+                var aspectRatio = 1; //w/h
+                var sideH = Math.min(w * aspectRatio, h);
+                var sideW = Math.min(w, h / aspectRatio);
+                var side = Math.min(sideH, sideW);
+
+                this.render.canvas.style.height = side + "px";
+                this.render.canvas.style.width = side + "px";
+                // this.render.options.width = document.documentElement.clientWidth;
+                // this.render.options.height = document.documentElement.clientHeight;
+            }.bind(engine);
+
+// run the engine
+            Engine.run(engine);
 
         </script>
     </body>

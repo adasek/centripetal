@@ -11,17 +11,14 @@
 
 /**
  * 
- * @param {number} relW - width relative to parent (0..1) ... value -1 => const from aspectRatio
- * @param {number} relH - height relative to parent (0..1) ... value -1 => const from aspectRatio
- * @param {number} relX - x of center in parent relative coordinates (0..1)
- * @param {number} relY - y of center in parent relative coordinates (0..1)
+ * @param {number} x - x coordinate
+ * @param {number} y - y coordinate 
+ * @param {number} r - radius
  * @returns {Ball}
  */
-var Ball = function (relW, relH, relX, relY) {
-    DisplayObject.call(this, relW, relH, relX, relY);
+var Ball = function (x, y, r) {
+    this.body = Matter.Bodies.circle(x, y, r);
 
-    //object specific
-    this.texture.src = "gfx/ball.png";
+    this.body.render.sprite.texture = "gfx/ball_" + r + ".png";
 
 };
-Ball.prototype = Object.create(DisplayObject.prototype);
