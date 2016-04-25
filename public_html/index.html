@@ -75,6 +75,25 @@
                 // this.render.options.height = document.documentElement.clientHeight;
             }.bind(engine);
 
+            Matter.Events.on(engine, "beforeUpdate", function (event) {
+                //console.log('afterUpdate');
+                var engine = event.source;
+                var world = engine.world;
+                var gravity = world.gravity;
+                var myBodies = Matter.Composite.allBodies(world);
+                for (var i = 0; i < myBodies.length; i++) {
+                    var body = myBodies[i];
+                    if (typeof body.applyRopeGravity === "function" && body.onRopeGravity > 0) {
+                        //Apply my custom function for any objects currently on rope
+                        body.applyRopeGravity(
+                                gravity.x * gravity.scale,
+                                gravity.y * gravity.scale);
+                    }
+                }
+
+            });
+
+
 // run the engine
             Engine.run(engine);
 
@@ -84,7 +103,7 @@
             document.body.onkeyup = function (e) {
                 if (e.keyCode === 32) {
                     if (!hooked) {
-                         rope = Matter.Constraint.create({bodyA: player.body, bodyB: boxA});
+                        rope = Matter.Constraint.create({bodyA: player.body, bodyB: boxA});
                         player.body.onRopeGravity = 1;
                         World.add(engine.world, rope);
                         hooked = true;
