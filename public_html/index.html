@@ -100,6 +100,14 @@
 
 // run the engine
             Engine.run(engine);
+
+            engine.render.canvas.addEventListener("touch", function () {
+                player.toggleHook();
+            });
+            engine.render.canvas.addEventListener("click", function () {
+                player.toggleHook();
+            });
+
             document.body.onkeyup = function (e) {
                 if (e.keyCode === 32) {
                     player.toggleHook();
