@@ -41,7 +41,7 @@
                 }
             });
 
-            var player = new Ball(0, 0, 50);
+            var player = new Ball(engine.world, 0, 0, 50);
             var boxA = new Pylon(100, 200, 0);
             var boxB = new Pylon(400, 200, 0);
             var boxC = new Pylon(700, 200, 0);
@@ -51,7 +51,7 @@
 
 
             // add all of the bodies to the world
-            World.add(engine.world, [boxA.body, boxB.body, boxC.body, boxD.body, boxE.body, boxF.body, player.body]);
+            World.add(engine.world, [boxA.body, boxB.body, boxC.body, boxD.body, boxE.body, boxF.body]);
 
 
 
@@ -78,7 +78,6 @@
             }.bind(engine);
 
             Matter.Events.on(engine, "beforeUpdate", function (event) {
-                //console.log('afterUpdate');
                 var engine = event.source;
                 var world = engine.world;
                 var gravity = world.gravity;
@@ -92,17 +91,18 @@
                                 gravity.y * gravity.scale);
                     }
                 }
+            });
 
+            Matter.Events.on(engine, "afterUpdate", function (event) {
+                player.checkBoundaries(engine);
             });
 
 
 // run the engine
             Engine.run(engine);
-
-
             document.body.onkeyup = function (e) {
                 if (e.keyCode === 32) {
-                    player.toggleHook(engine.world);
+                    player.toggleHook();
                 }
             };
 
