@@ -98,22 +98,9 @@
             Engine.run(engine);
 
 
-            hooked = false;
-            rope = null;
             document.body.onkeyup = function (e) {
                 if (e.keyCode === 32) {
-                    if (!hooked) {
-                        rope = Matter.Constraint.create({bodyA: player.body, bodyB: boxA});
-                        player.body.onRopeGravity = 1;
-                        player.body.rope = rope;
-                        World.add(engine.world, rope);
-                        hooked = true;
-                    } else {
-                        World.remove(engine.world, rope);
-                        player.body.onRopeGravity = 0;
-                        player.body.rope = null;
-                        hooked = false;
-                    }
+                    player.toggleHook(engine.world);
                 }
             };
 
