@@ -86,7 +86,7 @@
                     var body = myBodies[i];
                     if (typeof body.applyRopeGravity === "function" && body.onRopeGravity > 0) {
                         //Apply my custom function for any objects currently on rope
-                        body.applyRopeGravity(
+                        body.applyRopeGravity(event.timestamp,
                                 gravity.x * gravity.scale,
                                 gravity.y * gravity.scale);
                     }

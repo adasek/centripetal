@@ -106,7 +106,7 @@ Ball.prototype.createBody = function (x, y, r) {
      * @param {number} gy - gravity y part
      * @returns {undefined}
      */
-    this.body.applyRopeGravity = function (gx, gy) {
+    this.body.applyRopeGravity = function (timestamp,gx, gy) {
         //this is Ball.body
 
         if (this.onRopeGravity > 0) {
@@ -114,7 +114,7 @@ Ball.prototype.createBody = function (x, y, r) {
             this.force.x -= gx * this.mass;
             this.force.y -= gy * this.mass;
         }
-        this.force.x+=this.velocity.x/20000;
-        this.force.y+=this.velocity.y/20000;
+        this.force.x+=timestamp*this.velocity.x/(50000000);
+        this.force.y+=timestamp*this.velocity.y/(50000000);
     };
 };
