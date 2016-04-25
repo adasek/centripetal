@@ -20,6 +20,7 @@
         <script type="text/javascript" src="bower_components/Matter/build/matter.js"></script>
 
         <script type="text/javascript" src="class/ball.js"></script>
+        <script type="text/javascript" src="class/pylon.js"></script>
 
     </head>
     <body>
@@ -41,16 +42,16 @@
             });
 
             var player = new Ball(0, 0, 50);
-
-            var boxA = Bodies.rectangle(400, 200, 10, 10);
-            Matter.Body.setStatic(boxA, true);
-
-            //Rope
-            //Matter.Body.applyForce(player.body, Matter.Vector.create(0, 0), Matter.Vector.create(0, -1));
+            var boxA = new Pylon(100, 200, 0);
+            var boxB = new Pylon(400, 200, 0);
+            var boxC = new Pylon(700, 200, 0);
+            var boxD = new Pylon(100, 400, 0);
+            var boxE = new Pylon(400, 400, 0);
+            var boxF = new Pylon(700, 400, 0);
 
 
             // add all of the bodies to the world
-            World.add(engine.world, [boxA, player.body]);
+            World.add(engine.world, [boxA.body, boxB.body, boxC.body, boxD.body, boxE.body, boxF.body, player.body]);
 
 
 

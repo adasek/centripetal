@@ -2,8 +2,6 @@
  * @copyright Adam Benda, 2016
  */
 
-/* global DisplayObject */
-
 /**
  * @class
  * @classdesc Ball
