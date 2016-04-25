@@ -54,7 +54,6 @@ Ball.prototype.toggleHook = function () {
         this.rope = Matter.Constraint.create({bodyA: this.body, bodyB: target});
         this.body.onRopeGravity = 1;
         Matter.World.add(world, this.rope);
-        this.body.aVel = Matter.Vector.create(this.body.velocity.x, this.body.velocity.y);
         this.hooked = true;
     } else {
         Matter.World.remove(world, this.rope);
@@ -115,7 +114,7 @@ Ball.prototype.createBody = function (x, y, r) {
             this.force.x -= gx * this.mass;
             this.force.y -= gy * this.mass;
         }
-        this.velocity.x = this.aVel.x;
-        this.velocity.y = this.aVel.y;
+        this.force.x+=this.velocity.x/20000;
+        this.force.y+=this.velocity.y/20000;
     };
 };
