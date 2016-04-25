@@ -14,9 +14,11 @@
                        background-color:#aaaaaa;
             }
 
+            #overlay {position:fixed;width:100%;height:100%}
 
         </style>
 
+        <script type="text/javascript" src="bower_components/pixi.js/bin/pixi.js"></script>
         <script type="text/javascript" src="bower_components/Matter/build/matter.js"></script>
 
         <script type="text/javascript" src="class/ball.js"></script>
@@ -24,7 +26,7 @@
 
     </head>
     <body>
-
+        <div id="overlay"></div>
         <script type="text/javascript">
             // Matter.js module aliases
             var Engine = Matter.Engine,
@@ -32,8 +34,10 @@
                     Bodies = Matter.Bodies;
 
             // create a Matter.js engine
-            var engine = Engine.create(document.body, {
+            var engine = Engine.create({
                 render: {
+                    element: document.body,
+                    controller: Matter.RenderPixi,
                     options: {
                         width: 1024,
                         height: 1024
@@ -101,10 +105,10 @@
 // run the engine
             Engine.run(engine);
 
-            engine.render.canvas.addEventListener("touch", function () {
+            document.getElementById('overlay').addEventListener("touch", function () {
                 player.toggleHook();
             });
-            engine.render.canvas.addEventListener("click", function () {
+            document.getElementById('overlay').addEventListener("click", function () {
                 player.toggleHook();
             });
 
