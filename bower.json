@@ -6,8 +6,10 @@
     ".jshintrc",
     "**/*.txt"
   ],
-  "dependencies": {"matter-js": "0.9.3",
-    "Matter": "matter-js#0.9.3"
+  "dependencies": {
+    "matter-js": "0.9.3",
+    "Matter": "matter-js#0.9.3",
+    "pixi.js": "3.0.11"
   },
   "devDependencies": {}
 }
