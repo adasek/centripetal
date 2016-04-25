@@ -20,6 +20,8 @@ var Ball = function (x, y, r) {
     this.body = Matter.Bodies.circle(x, y, r);
     this.body.frictionAir = 0;
     this.body.friction = 0;
+    this.body.force.x = 0;
+    this.body.force.y = 0.1;
 
     this.body.render.sprite.texture = "gfx/ball_" + r + ".png";
     //passing this for texture changing
@@ -39,7 +41,8 @@ var Ball = function (x, y, r) {
             this.force.x -= gx * this.mass;
             this.force.y -= gy * this.mass;
         }
-
+        this.velocity.x = this.aVel.x;
+        this.velocity.y = this.aVel.y;
     };
 
 };
@@ -73,6 +76,7 @@ Ball.prototype.toggleHook = function (world) {
         this.rope = Matter.Constraint.create({bodyA: this.body, bodyB: target});
         this.body.onRopeGravity = 1;
         Matter.World.add(world, this.rope);
+        this.body.aVel = Matter.Vector.create(this.body.velocity.x, this.body.velocity.y);
         this.hooked = true;
     } else {
         Matter.World.remove(world, this.rope);
