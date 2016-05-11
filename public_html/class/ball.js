@@ -95,32 +95,34 @@ Ball.prototype.createBody = function (x, y, r) {
     this.body.force.y = 0.1;
     this.body.frictionAir = 0;
     this.body.friction = 0;
+    Matter.Body.setMass(this.body, 5);
     this.body.render.sprite.texture = "gfx/ball_" + r + ".png";
     //passing this for texture changing
     this.body.r = r;
+    this.body.parentBall = this;
 
 
     /**
      * Disable effect of ordinary gravity and apply my special rope gravity
+     * @param {number} timestamp - in ms
      * @param {number} gx - gravity x part (world.gravity.x * gravity.scale)
      * @param {number} gy - gravity y part
      * @returns {undefined}
      */
-    this.body.applyRopeGravity = function (timestamp, gx, gy) {
+    this.body.applyRopeGravity = function (timeDiff, gx, gy) {
         //this is Ball.body
-
         if (this.onRopeGravity > 0) {
             //negating effect of _bodiesApplyGravity
             this.force.x -= gx * this.mass;
             this.force.y -= gy * this.mass;
+            var addForce = timeDiff / (50 * this.parentBall.rope.length);
+            //smaller bound -> faster
+
+            //add force in the direction of our move
+            var nVel = Matter.Vector.normalise(this.velocity);
+            this.force.x += nVel.x * addForce;
+            this.force.y += nVel.y * addForce;
         }
 
-        var addForce = timestamp / (30000000);
-        //smaller bound -> faster : TODO
-
-        //add force in the direction of our move
-        var nVel = Matter.Vector.normalise(this.velocity);
-        this.force.x += nVel.x * addForce;
-        this.force.y += nVel.y * addForce;
     };
 };

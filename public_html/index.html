@@ -56,7 +56,8 @@
 
             // add all of the bodies to the world
             World.add(engine.world, [boxA.body, boxB.body, boxC.body, boxD.body, boxE.body, boxF.body]);
-
+            console.log(JSON.stringify(engine.world.gravity));
+            engine.world.gravity.scale = 0.0005;
 
 
 
@@ -86,15 +87,19 @@
                 var world = engine.world;
                 var gravity = world.gravity;
                 var myBodies = Matter.Composite.allBodies(world);
+                if (!this.lastTimestamp) {
+                    this.lastTimestamp = 0;
+                }
                 for (var i = 0; i < myBodies.length; i++) {
                     var body = myBodies[i];
                     if (typeof body.applyRopeGravity === "function" && body.onRopeGravity > 0) {
                         //Apply my custom function for any objects currently on rope
-                        body.applyRopeGravity(event.timestamp,
+                        body.applyRopeGravity(event.timestamp - this.lastTimestamp,
                                 gravity.x * gravity.scale,
                                 gravity.y * gravity.scale);
                     }
                 }
+                this.lastTimestamp = event.timestamp;
             });
 
             Matter.Events.on(engine, "afterUpdate", function (event) {
