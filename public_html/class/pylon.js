@@ -10,13 +10,14 @@
 
 /**
  * 
+ * @param {Matter.Engine} engine
  * @param {number} x - x coordinate
  * @param {number} y - y coordinate 
- * @param {number} r - radius
  * @returns {Ball}
  */
-var Pylon = function (x, y) {
-    this.body = Matter.Bodies.rectangle(x, y, 10, 10);
+var Pylon = function (engine, x, y) {
+    this.engine = engine;
+    this.body = Matter.Bodies.rectangle(engine.render.options.width * x, engine.render.options.height * y, 10, 10);
     Matter.Body.setStatic(this.body, true);
     this.body.collisionFilter.mask = 2;
 

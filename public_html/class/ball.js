@@ -9,17 +9,23 @@
 
 /**
  * 
+ * @param {Matter.Engine} engine -
  * @param {number} x - x coordinate
  * @param {number} y - y coordinate 
  * @param {number} r - radius
  * @returns {Ball}
  */
-var Ball = function (world, x, y, r) {
-    this.world = world;
-    this.initX = x;
-    this.initY = y;
-    this.initR = r;
-    this.createBody(x, y, r);
+var Ball = function (engine, x, y, r) {
+    this.engine = engine;
+    this.world = engine.world;
+    this.initX = x * this.engine.render.options.width;
+    this.initY = y * this.engine.render.options.height;
+    this.initR = r * this.engine.render.options.width;
+    this.createBody(
+            this.initX,
+            this.initY,
+            this.initR
+            );
     Matter.Composite.add(this.world, this.body);
 
     this.distracted = 0;
@@ -122,7 +128,8 @@ Ball.prototype.createBody = function (x, y, r) {
     this.body.frictionAir = 0;
     this.body.friction = 0;
     Matter.Body.setMass(this.body, 5);
-    this.body.render.sprite.texture = "gfx/ball_" + r + ".png";
+    //console.log(r);
+    //this.body.render.sprite.texture = "gfx/ball_50.png";
     //passing this for texture changing
     this.body.r = r;
     this.body.parentBall = this;
