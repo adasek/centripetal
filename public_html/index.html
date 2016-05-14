@@ -51,7 +51,7 @@
             var boxE = new Pylon(engine, 0.5, 0.66, 0);
             var boxF = new Pylon(engine, 0.75, 0.66, 0);
 
-            var player = new Ball(engine, 0.1, 0, 0.05);
+            var player = new Ball(engine, 0.1, 0, 0.05, "gfx/evelina.png");
             var enemy = new Ball(engine, 0.8, 0, 0.05);
 
 
@@ -105,9 +105,24 @@
             });
 
 
+            Matter.Events.on(engine, "collisionActive", function (event) {
+
+                // change object colours to show those in an active collision (e.g. resting contact)
+                for (var i = 0; i < event.pairs.length; i++) {
+                    var pair = event.pairs[i];
+                    if (pair.bodyA.parentBall !== undefined && pair.bodyB.parentBall !== undefined) {
+                        //collision between two balls
+                        pair.bodyA.parentBall.destroyHook();
+                        pair.bodyB.parentBall.destroyHook();
+                    }
+                }
+
+            });
+
+
             Matter.Events.on(engine, "afterUpdate", function (event) {
-                player.checkBoundaries(engine);
-                enemy.checkBoundaries(engine);
+                player.checkBoundaries();
+                enemy.checkBoundaries();
             });
 
 

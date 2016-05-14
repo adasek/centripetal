@@ -13,14 +13,16 @@
  * @param {number} x - x coordinate
  * @param {number} y - y coordinate 
  * @param {number} r - radius
+ * @param {string} textureFile - png image containing texture
  * @returns {Ball}
  */
-var Ball = function (engine, x, y, r) {
+var Ball = function (engine, x, y, r, textureFile) {
     this.engine = engine;
     this.world = engine.world;
     this.initX = x * this.engine.render.options.width;
     this.initY = y * this.engine.render.options.height;
     this.initR = r * this.engine.render.options.width;
+    this.textureFile = textureFile;
     this.createBody(
             this.initX,
             this.initY,
@@ -95,16 +97,16 @@ Ball.prototype.toggleHook = function () {
 
 };
 
-Ball.prototype.checkBoundaries = function (engine) {
+Ball.prototype.checkBoundaries = function () {
     if (this.hooked) {
         //if we are hooked up its ok
         return true;
     }
 
     if (
-            engine.render.bounds.max.y < this.body.position.y - this.body.r ||
-            engine.render.bounds.min.x > this.body.position.x + this.body.r ||
-            engine.render.bounds.max.x < this.body.position.x - this.body.r
+            this.engine.render.bounds.max.y < this.body.position.y - this.initR ||
+            this.engine.render.bounds.min.x > this.body.position.x + this.initR ||
+            this.engine.render.bounds.max.x < this.body.position.x - this.initR
             ) {
         this.killed();
     }
@@ -127,9 +129,12 @@ Ball.prototype.createBody = function (x, y, r) {
     this.body.force.y = 0.1;
     this.body.frictionAir = 0;
     this.body.friction = 0;
+    Matter.Body.setAngularVelocity(this.body, 0.01);
     Matter.Body.setMass(this.body, 5);
     //console.log(r);
-    this.body.render.sprite.texture = "gfx/ball.png";
+    if (this.textureFile && this.textureFile.length && this.textureFile.length > 0) {
+        this.body.render.sprite.texture = this.textureFile;
+    }
     this.body.parentBall = this;
 
 
@@ -162,6 +167,21 @@ Ball.prototype.createBody = function (x, y, r) {
 };
 
 
+/**
+ * Violently destroy the hook = by collision with another object
+ * This Ball has to be unhookable some time depending on current speed
+ * @returns {undefined}
+ */
+Ball.prototype.destroyHook = function () {
+    if (this.hooked) {
+        this.toggleHook();
+    }
+};
+
+/**
+ * Control this ball if not controlled by a player
+ * @returns {undefined}
+ */
 Ball.prototype.ai = function () {
     if (this.controlled) {
         return;
