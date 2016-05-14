@@ -22,7 +22,7 @@ var Ball = function (world, x, y, r) {
     this.createBody(x, y, r);
     Matter.Composite.add(this.world, this.body);
 
-
+    this.distracted = 0;
 };
 
 Ball.prototype.toggleHook = function () {
@@ -47,7 +47,7 @@ Ball.prototype.toggleHook = function () {
                         (Matter.Vector.magnitude(centripetalVect) * Matter.Vector.magnitude(this.body.velocity));
 
 
-                if ((Math.abs(angle) > 0.1)) {
+                if ((Math.abs(angle) > 100 / Matter.Vector.magnitude(centripetalVect))) {
                     //not compatible vector
                     continue;
                 }
@@ -67,7 +67,7 @@ Ball.prototype.toggleHook = function () {
             //no target available
             return false;
         }
-        
+
         this.rope = Matter.Constraint.create({bodyA: this.body, bodyB: target});
         this.body.onRopeGravity = 1;
         Matter.World.add(world, this.rope);
