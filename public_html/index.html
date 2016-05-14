@@ -37,7 +37,7 @@
             var engine = Engine.create({
                 render: {
                     element: document.body,
-                    controller: Matter.RenderPixi,
+                    controller: Matter.Render,
                     options: {
                         width: 1024,
                         height: 1024
@@ -52,13 +52,12 @@
             var boxD = new Pylon(100, 400, 0);
             var boxE = new Pylon(400, 400, 0);
             var boxF = new Pylon(700, 400, 0);
+            var enemy = new Ball(engine.world, 450, 0, 50);
 
 
             // add all of the bodies to the world
             World.add(engine.world, [boxA.body, boxB.body, boxC.body, boxD.body, boxE.body, boxF.body]);
             engine.world.gravity.scale = 0.0005;
-
-
 
 
             var renderOptions = engine.render.options;
@@ -85,6 +84,10 @@
                 var engine = event.source;
                 var world = engine.world;
                 var gravity = world.gravity;
+
+                player.ai();
+                enemy.ai();
+
                 var myBodies = Matter.Composite.allBodies(world);
                 if (!this.lastTimestamp) {
                     this.lastTimestamp = 0;
@@ -100,6 +103,7 @@
                 }
                 this.lastTimestamp = event.timestamp;
             });
+
 
             Matter.Events.on(engine, "afterUpdate", function (event) {
                 player.checkBoundaries(engine);
@@ -118,7 +122,11 @@
 
             document.body.onkeyup = function (e) {
                 if (e.keyCode === 32) {
+                    player.controlled = true;
                     player.toggleHook();
+                } else if (e.keyCode === 81) {
+                    enemy.controlled = true;
+                    enemy.toggleHook();
                 }
             };
 

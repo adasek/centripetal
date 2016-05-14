@@ -23,6 +23,10 @@ var Ball = function (world, x, y, r) {
     Matter.Composite.add(this.world, this.body);
 
     this.distracted = 0;
+    this.controlled = false;
+
+    this.timeHooked = new Date();
+    this.timeUnhooked = new Date();
 };
 
 Ball.prototype.toggleHook = function () {
@@ -71,11 +75,15 @@ Ball.prototype.toggleHook = function () {
         this.rope = Matter.Constraint.create({bodyA: this.body, bodyB: target});
         this.body.onRopeGravity = 1;
         Matter.World.add(world, this.rope);
+        //this.rope.render.strokeStyle = "#ff0000";
         this.hooked = true;
+        this.timeHooked = new Date();
         return true;
     } else {
         Matter.World.remove(world, this.rope);
+        
         this.body.onRopeGravity = 0;
+        this.timeUnhooked = new Date();
         this.hooked = false;
     }
 
@@ -99,7 +107,7 @@ Ball.prototype.checkBoundaries = function (engine) {
 Ball.prototype.killed = function () {
     //unhook
     if (this.hooked) {
-        this.toogleHook(this.world);
+        this.toggleHook(this.world);
     }
 
     Matter.Composite.remove(this.world, this.body);
@@ -122,12 +130,15 @@ Ball.prototype.createBody = function (x, y, r) {
 
     /**
      * Disable effect of ordinary gravity and apply my special rope gravity
-     * @param {number} timestamp - in ms
+     * @param {number} timeDiff - in ms
      * @param {number} gx - gravity x part (world.gravity.x * gravity.scale)
      * @param {number} gy - gravity y part
      * @returns {undefined}
      */
     this.body.applyRopeGravity = function (timeDiff, gx, gy) {
+
+
+
         //this is Ball.body
         if (this.onRopeGravity > 0) {
             //negating effect of _bodiesApplyGravity
@@ -143,4 +154,26 @@ Ball.prototype.createBody = function (x, y, r) {
         }
 
     };
+};
+
+
+Ball.prototype.ai = function () {
+    if (this.controlled) {
+        return;
+    }
+
+    //Basic "AI"
+    if (this.hooked) {
+        var q = new Date() - this.timeHooked;
+        if (q > 1000) { //todo: vector not outside
+            //unhook
+            this.toggleHook();
+        }
+    } else {
+        //try to hook 
+        var q = new Date() - this.timeUnhooked;
+        if (q > 500) {
+            this.toggleHook();
+        }
+    }
 };
