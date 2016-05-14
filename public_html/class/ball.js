@@ -129,9 +129,7 @@ Ball.prototype.createBody = function (x, y, r) {
     this.body.friction = 0;
     Matter.Body.setMass(this.body, 5);
     //console.log(r);
-    //this.body.render.sprite.texture = "gfx/ball_50.png";
-    //passing this for texture changing
-    this.body.r = r;
+    this.body.render.sprite.texture = "gfx/ball.png";
     this.body.parentBall = this;
 
 
