@@ -15,6 +15,8 @@
             }
 
             #overlay {position:fixed;width:100%;height:100%}
+            
+            canvas{max-width:100%;max-height:100%;}
 
         </style>
 
@@ -129,56 +131,10 @@
             });
 
 
-            window.requestAnimFrame = (function () {
-                return  window.requestAnimationFrame ||
-                        window.webkitRequestAnimationFrame ||
-                        window.mozRequestAnimationFrame ||
-                        function (callback) {
-                            window.setTimeout(callback, 1000 / 60);
-                        };
-            })();
-
-            var runner = Matter.Runner.create({isFixed: false});
+            var runner = Matter.Runner.create({isFixed: false, deltaMin: 1, deltaMax: 1000});
+            //runner.isFixed=true;
             Matter.Runner.run(runner, engine);
-            /*
-             document.getElementById('game').width = 512;
-             document.getElementById('game').height = 512;
-             //run the engine
-             lastDate = new Date();
-             function nextFrame() {
-             var bodies = Matter.Composite.allBodies(engine.world);
-             
-             window.requestAnimFrame(nextFrame);
-             
-             var context = document.getElementById('game').getContext('2d');
-             context.fillStyle = '#fff';
-             context.fillRect(0, 0, document.getElementById('game').width, document.getElementById('game').height);
-             
-             context.beginPath();
-             
-             for (var i = 0; i < bodies.length; i += 1) {
-             var vertices = bodies[i].vertices;
-             
-             context.moveTo(vertices[0].x, vertices[0].y);
-             
-             for (var j = 1; j < vertices.length; j += 1) {
-             context.lineTo(vertices[j].x, vertices[j].y);
-             }
-             
-             context.lineTo(vertices[0].x, vertices[0].y);
-             }
-             
-             context.lineWidth = 1;
-             context.strokeStyle = '#999';
-             context.stroke();
-             
-             var nowDate = new Date();
-             timeDiff = nowDate - lastDate;
-             Matter.Engine.update(engine, timeDiff);
-             lastDate = nowDate;
-             }
-             nextFrame();
-             */
+
 
             document.getElementById('overlay').addEventListener("touch", function () {
                 player.controlled = true;
