@@ -36,6 +36,23 @@ Ball.prototype.toggleHook = function () {
         for (var i = 0; i < world.bodies.length; i++) {
             var body = world.bodies[i];
             if (body.isStatic) {
+
+                //Check if current speed vector is compatible with
+                //vector of rotation hooked to this body
+                var centripetalVect = Matter.Vector.create(
+                        body.position.x - this.body.position.x,
+                        body.position.y - this.body.position.y
+                        );
+                var angle = Matter.Vector.dot(centripetalVect, this.body.velocity) /
+                        (Matter.Vector.magnitude(centripetalVect) * Matter.Vector.magnitude(this.body.velocity));
+
+
+                if ((Math.abs(angle) > 0.1)) {
+                    //not compatible vector
+                    continue;
+                }
+
+
                 var thisDistance = Matter.Vector.magnitudeSquared(
                         Matter.Vector.sub(body.position, this.body.position)
                         );
@@ -46,32 +63,16 @@ Ball.prototype.toggleHook = function () {
             }
         }
 
-        if (target === "null") {
+        if (target === null) {
             //no target available
-            return;
+            return false;
         }
-
-        //Check if current speed vector is compatible with
-        //vector of rotation hooked to this body
-        var centripetalVect = Matter.Vector.create(
-                target.position.x - this.body.position.x,
-                target.position.y - this.body.position.y
-                );
-        var angle = Matter.Vector.dot(centripetalVect, this.body.velocity) /
-                (Matter.Vector.magnitude(centripetalVect) * Matter.Vector.magnitude(this.body.velocity));
-
-
-        if ((Math.abs(angle) > 0.8)) {
-            //not compatible vector
-            return;
-        }
-
-
-
+        
         this.rope = Matter.Constraint.create({bodyA: this.body, bodyB: target});
         this.body.onRopeGravity = 1;
         Matter.World.add(world, this.rope);
         this.hooked = true;
+        return true;
     } else {
         Matter.World.remove(world, this.rope);
         this.body.onRopeGravity = 0;
