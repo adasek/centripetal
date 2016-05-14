@@ -154,7 +154,7 @@ Ball.prototype.createBody = function (x, y, r) {
             //negating effect of _bodiesApplyGravity
             this.force.x -= gx * this.mass;
             this.force.y -= gy * this.mass;
-            var addForce = timeDiff / (50 * this.parentBall.rope.length);
+            var addForce = timeDiff / (100 * this.parentBall.rope.length);
             //smaller bound -> faster
 
             //add force in the direction of our move
