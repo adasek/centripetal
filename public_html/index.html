@@ -114,9 +114,11 @@
             Engine.run(engine);
 
             document.getElementById('overlay').addEventListener("touch", function () {
+                player.controlled = true;
                 player.toggleHook();
             });
             document.getElementById('overlay').addEventListener("click", function () {
+                player.controlled = true;
                 player.toggleHook();
             });
 

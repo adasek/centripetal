@@ -81,7 +81,7 @@ Ball.prototype.toggleHook = function () {
         return true;
     } else {
         Matter.World.remove(world, this.rope);
-        
+
         this.body.onRopeGravity = 0;
         this.timeUnhooked = new Date();
         this.hooked = false;
@@ -167,7 +167,9 @@ Ball.prototype.ai = function () {
         var q = new Date() - this.timeHooked;
         if (q > 1000) { //todo: vector not outside
             //unhook
-            this.toggleHook();
+            if (this.body.velocity.y < 0 && Math.abs(this.body.velocity.y) > Math.abs(this.body.velocity.x)) {
+                this.toggleHook();
+            }
         }
     } else {
         //try to hook 
