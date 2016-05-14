@@ -80,7 +80,7 @@ Ball.prototype.toggleHook = function () {
             return false;
         }
 
-        this.rope = Matter.Constraint.create({bodyA: this.body, bodyB: target});
+        this.rope = Matter.Constraint.create({bodyA: this.body, bodyB: target, stiffness: 4});
         this.body.onRopeGravity = 1;
         Matter.World.add(world, this.rope);
         //this.rope.render.strokeStyle = "#ff0000";
