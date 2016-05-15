@@ -32,6 +32,7 @@ var Gamestate = function () {
         }
     });
 
+
     /**
      * All Pylons on the map
      * @type {Pylon[]}
@@ -82,6 +83,7 @@ var Gamestate = function () {
     renderOptions.showAngleIndicator = false;
 
 
+
     Matter.Events.on(this.engine, "beforeUpdate", this.beforeUpdate.bind(this));
     Matter.Events.on(this.engine, "collisionActive", this.collisionActive.bind(this));
     Matter.Events.on(this.engine, "afterUpdate", this.afterUpdate.bind(this));
@@ -121,6 +123,7 @@ var Gamestate = function () {
      * @type {number}
      */
     this.player.lives = 3;
+
 };
 
 Gamestate.prototype.resize = function () {
@@ -210,4 +213,23 @@ Gamestate.prototype.showScore = function () {
 Gamestate.prototype.gameOverSignal = function () {
     Matter.Runner.stop(this.runner, this.engine);
     this.gameOver = true;
+
+    document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.3)';
+    this.endScreen = document.createElement('div');
+    this.endScreen.setAttribute('id', 'endScreen');
+    this.endScreen.innerHTML = "Dospěl jsi s Evelínou ke <strong>SCORE " + (Math.round(this.getScore())) +
+            "</strong>" + "<p><a href=\"#\" onclick=\"gamestate=gamestate.restart.bind(gamestate)()\">Chceš to zkusit znovu?</a></p>" +
+            "<p>A už jsi evaluoval? Čím více dotazníků, tím lepší bonusy :)</p>";
+
+    document.getElementById('overlay').appendChild(this.endScreen);
+};
+
+Gamestate.prototype.restart = function () {
+    //destroy everything that is mine
+    Matter.Engine.clear(this.engine);
+    this.engine.render.canvas.parentElement.removeChild(this.engine.render.canvas);
+    this.endScreen.parentElement.removeChild(this.endScreen);
+    document.getElementById('overlay').style.backgroundColor = 'transparent';
+
+    return new Gamestate();
 };
