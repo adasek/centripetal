@@ -109,6 +109,7 @@ Gamestate.prototype.afterUpdate = function () {
             return;
         }
     }
+    
     this.evelina.update();
     this.showScore();
     this.runner.deltaMax = 1000;//fixed bug in Matter (after restart former time was used and biiiig tick was rendered)

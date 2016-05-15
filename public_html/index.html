@@ -24,6 +24,7 @@
 
             canvas#evelina{
                 height:100%;
+                max-height:100vh;
                 width:auto;
                 float:left;
             }
@@ -73,6 +74,7 @@
             gamestate = new Gamestate();
 
             window.onresize = gamestate.resize();
+            window.onorientationchange = gamestate.resize();
         </script>
     </body>
 </html>
