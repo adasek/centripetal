@@ -58,6 +58,7 @@ var Gamestate = function () {
      * @type{Ball}
      */
     this.player = new Ball(this.engine, 0.1, 0, 0.05, "gfx/evelina.png");
+    this.player.gamestate = this;
     this.balls.push(this.player);
 
     //Creating enemies
@@ -71,6 +72,10 @@ var Gamestate = function () {
 
     this.engine.world.gravity.scale = 0.0005;
 
+    /**
+     * Indicates that game was ended
+     */
+    this.gameOver = false;
 
     var renderOptions = this.engine.render.options;
     renderOptions.wireframes = false;
@@ -82,9 +87,9 @@ var Gamestate = function () {
     Matter.Events.on(this.engine, "afterUpdate", this.afterUpdate.bind(this));
 
 
-    var runner = Matter.Runner.create({isFixed: false, deltaMin: 1, deltaMax: 1000});
+    this.runner = Matter.Runner.create({isFixed: false, deltaMin: 1, deltaMax: 1000});
     //runner.isFixed=true;
-    Matter.Runner.run(runner, this.engine);
+    Matter.Runner.run(this.runner, this.engine);
 
     //Register input 
     document.getElementById('overlay').addEventListener("touch", this.playerInput.bind(this));
@@ -99,7 +104,23 @@ var Gamestate = function () {
     //Evelina animation
     this.evelina = new Evelina(document.getElementById('evelina'));
 
+    /**
+     * Score for outlived enemies
+     * @type {number}
+     */
+    this._scoreNoTime = 0;
 
+    /**
+     * Start of game time
+     * @type {Date}
+     */
+    this.startTime = new Date();
+
+    /**
+     * Available lives
+     * @type {number}
+     */
+    this.player.lives = 3;
 };
 
 Gamestate.prototype.resize = function () {
@@ -150,6 +171,7 @@ Gamestate.prototype.afterUpdate = function () {
         this.balls[i].checkBoundaries();
     }
     this.evelina.update();
+    this.showScore();
 };
 
 Gamestate.prototype.playerInput = function () {
@@ -170,4 +192,22 @@ Gamestate.prototype.collisionActive = function (event) {
             //todo: if one of them player, bump Evelina
         }
     }
+};
+
+/**
+ * Returns current score
+ * @returns {Number}
+ */
+Gamestate.prototype.getScore = function () {
+    return this._scoreNoTime + ((new Date() - this.startTime) / 100);
+};
+
+Gamestate.prototype.showScore = function () {
+    document.getElementById('score').innerHTML = (Math.round(this.getScore()));
+    document.getElementById('lives').innerHTML = (this.player.lives >= 0) ? this.player.lives : 0;
+};
+
+Gamestate.prototype.gameOverSignal = function () {
+    Matter.Runner.stop(this.runner, this.engine);
+    this.gameOver = true;
 };

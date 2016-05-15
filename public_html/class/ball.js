@@ -113,14 +113,23 @@ Ball.prototype.checkBoundaries = function () {
 };
 
 Ball.prototype.killed = function () {
+    if (this.lives !== undefined) {
+        this.lives--;
+        if (this.lives < 0) {
+            this.gamestate.gameOverSignal();
+        }
+    }
+
     //unhook
     if (this.hooked) {
         this.toggleHook(this.world);
     }
 
     Matter.Composite.remove(this.world, this.body);
-    this.createBody(this.initX, this.initY, this.initR);
-    Matter.Composite.add(this.world, this.body);
+    if (this.lives === undefined || this.lives >= 0) {
+        this.createBody(this.initX, this.initY, this.initR);
+        Matter.Composite.add(this.world, this.body);
+    }
 };
 
 Ball.prototype.createBody = function (x, y, r) {
