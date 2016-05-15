@@ -28,6 +28,8 @@ var Evelina = function (canvas) {
     this.loadImage("botaR");
     this.loadImage("hlava");
     this.loadImage("telo");
+    this.loadImage("ruka");
+    this.loadImage("rukaR");
 
     this.okoL = new Evelina_oko(canvas, 0.11, 0.0045);
     this.okoR = new Evelina_oko(canvas, -0.11, 0.0045);
@@ -93,7 +95,7 @@ Evelina.prototype.update = function () {
     this.ctx.strokeStyle = "blue";
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.beginPath();
-    this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2, this.canvas.height * 0.5, 0, 2 * Math.PI);
+    this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2, this.canvas.height * 0.49, 0, 2 * Math.PI);
     this.ctx.stroke();
 
     var bodyPos = this.bodyPos(currentTime);
@@ -103,6 +105,11 @@ Evelina.prototype.update = function () {
 
     this.drawPart('botaL', 1 / 4 + 0.02 * Math.sin(currentTime / 713), 7 / 8 + 0.02 * Math.sin(currentTime / 1200));
     this.drawPart('botaR', 3 / 4 + 0.009 * Math.sin(currentTime / 713), 7 / 8);
+
+    //left hand (on the right)
+    this.drawPart('ruka', 0.91 + 0.01 * Math.sin(currentTime / 1231), 0.1 + 0.01 * Math.sin(currentTime / 772), Math.PI + 0.01 * Math.sin(currentTime / 122));
+    //right hand
+    this.drawPart('rukaR', 0.08 + 0.01 * Math.sin(currentTime / 1347), 0.2 + 0.01 * Math.sin(currentTime / 1007), 0.01 * Math.sin(currentTime / 122));
 
     this.okoL.update(timeDiff, this.coeff, 1 / 2, 1 / 8 + 0.005 * Math.sin(currentTime / 500));
     this.okoR.update(timeDiff, this.coeff, 1 / 2, 1 / 8 + 0.005 * Math.sin(currentTime / 500));
@@ -114,9 +121,12 @@ Evelina.prototype.update = function () {
 };
 
 
-Evelina.prototype.drawPart = function (name, centerX, centerY) {
+Evelina.prototype.drawPart = function (name, centerX, centerY, rotation) {
     centerX = this.canvas.width * centerX;
     centerY = this.canvas.height * centerY;
+    if (rotation === undefined) {
+        rotation = 0;
+    }
 
 
     if (this.images[name].complete) {
@@ -124,14 +134,28 @@ Evelina.prototype.drawPart = function (name, centerX, centerY) {
         var cHe = this.images[name].height;
         cWi *= this.coeff;
         cHe *= this.coeff;
+
+
+        if (rotation !== 0) {
+            //rotate context first
+            this.ctx.translate(centerX, centerY);
+            this.ctx.rotate(rotation);
+            this.ctx.translate(-centerX, -centerY);
+        }
+
         this.ctx.drawImage(this.images[name], 0, 0, this.images[name].width, this.images[name].height, (centerX - cWi / 2), (centerY - cHe / 2), cWi, cHe);
+
+        if (rotation !== 0) {
+            this.ctx.translate(centerX, centerY);
+            this.ctx.rotate(-rotation);
+            this.ctx.translate(-centerX, -centerY);
+        }
     }
 };
 
 /**
  * Repetetive movement
- * @param {type} centerX
- * @param {type} centerY
+ * @param {Date} currentTime
  * @returns {undefined}
  */
 Evelina.prototype.bodyPos = function (currentTime) {
