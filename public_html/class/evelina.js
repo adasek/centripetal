@@ -32,6 +32,12 @@ var Evelina = function (canvas) {
 
     this.frameNr = 0;
 
+    /**
+     * Happiness of Evelina from -1(sad) to 1(extalted)
+     * @type {number}
+     */
+    this.happiness = 0;
+
 };
 
 Evelina.prototype.loadImage = function (name) {
@@ -43,6 +49,16 @@ Evelina.prototype.loadImage = function (name) {
  * Updates animation and redraw
  */
 Evelina.prototype.update = function () {
+    if (this.frameNr % 100 === 0) {
+        this.happiness += Math.random() % 0.4 - 0.19;
+        if (this.happiness > 1) {
+            this.happiness = 1;
+        }
+        if (this.happiness < -1) {
+            this.happiness = -1;
+        }
+    }
+    
     this.frameNr++;
     var currentTime = new Date();
     var timeDiff = this.lastUpdate - currentTime;
@@ -78,6 +94,13 @@ Evelina.prototype.drawPart = function (name, centerX, centerY) {
 };
 
 
+/**
+ * Draw a mouth as bezier curve.
+ * Mouth is shaped according to Eveline happiness level
+ * @param {type} centerX
+ * @param {type} centerY
+ * @returns {undefined}
+ */
 Evelina.prototype.drawMouth = function (centerX, centerY) {
     centerX = this.canvas.width * centerX;
     centerY = this.canvas.height * centerY;
@@ -86,8 +109,8 @@ Evelina.prototype.drawMouth = function (centerX, centerY) {
     this.ctx.beginPath();
     this.ctx.moveTo(centerX - 0.1 * this.canvas.width, centerY);
     this.ctx.bezierCurveTo(
-            centerX, centerY + (Math.random() % 0.01) * this.canvas.height,
-            centerX, centerY + (Math.random() % 0.01) * this.canvas.height,
+            centerX, centerY + (this.happiness / 100) * this.canvas.height,
+            centerX, centerY + (this.happiness / 100) * this.canvas.height,
             centerX + 0.1 * this.canvas.width, centerY
             );
     this.ctx.stroke();
