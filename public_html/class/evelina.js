@@ -58,10 +58,23 @@ Evelina.prototype.loadImage = function (name) {
     this.images[name].src = "gfx/evelina/" + name + ".png";
 };
 
+Evelina.prototype.show = function () {
+    this.render = true;
+};
+
+Evelina.prototype.hide = function () {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.render = false;
+};
+
 /**
  * Updates animation and redraw
  */
 Evelina.prototype.update = function () {
+    if (!this.render) {
+        return;
+    }
+
     if (this.frameNr % 50 === 0) {
         this.okoLBlink = 1;
         this.happiness += Math.random() % 0.4 - 0.18;

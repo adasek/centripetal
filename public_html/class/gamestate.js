@@ -17,7 +17,6 @@ var Gamestate = function () {
      */
     this.engine = null;
 
-    this.inst = 0;
 
     /**
      * All Pylons on the map
@@ -56,8 +55,11 @@ var Gamestate = function () {
      */
     this.startTime = new Date();
 
+
+
     this.restart();
 
+    this.resize();
 };
 
 Gamestate.prototype.resize = function () {
@@ -70,11 +72,26 @@ Gamestate.prototype.resize = function () {
     var sideW = Math.min(w, h / aspectRatio);
     var side = Math.min(sideH, sideW);
 
-    if (side > this.engine.render.options.width) {
-        side = this.engine.render.options.width;
+    if (this.engine) {
+        if (side > this.engine.render.options.width) {
+            side = this.engine.render.options.width;
+        }
     }
-    this.engine.render.canvas.style.height = side + "px";
-    this.engine.render.canvas.style.width = side + "px";
+
+    /*If no space on the right, do not draw Evelina */
+    if (this.evelina !== undefined && this.evelina !== null) {
+        if ((this.side * 1.3) < w) {
+            this.evelina.show();
+        } else {
+            this.evelina.hide();
+        }
+    }
+
+    this.side = side;
+    if (this.engine !== undefined && this.engine !== null) {
+        this.engine.render.canvas.style.height = side + "px";
+        this.engine.render.canvas.style.width = side + "px";
+    }
 };
 
 Gamestate.prototype.beforeUpdate = function (event) {
@@ -109,8 +126,9 @@ Gamestate.prototype.afterUpdate = function () {
             return;
         }
     }
-    
+
     this.evelina.update();
+
     this.showScore();
     this.runner.deltaMax = 1000;//fixed bug in Matter (after restart former time was used and biiiig tick was rendered)
 };
@@ -178,6 +196,7 @@ Gamestate.prototype.restart = function (evt) {
         document.getElementById('overlay').style.backgroundColor = 'transparent';
     }
 
+    this.resize();
 
     // create a Matter.js engine
     this.engine = Matter.Engine.create({
@@ -185,7 +204,7 @@ Gamestate.prototype.restart = function (evt) {
             element: document.getElementById('gameArea'),
             controller: Matter.Render,
             options: {
-                width: 512,
+                width: 512, /* this.side*/
                 height: 512
             }
         },

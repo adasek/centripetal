@@ -73,8 +73,8 @@
         <script type="text/javascript">
             gamestate = new Gamestate();
 
-            window.onresize = gamestate.resize();
-            window.onorientationchange = gamestate.resize();
+            window.onresize = gamestate.resize.bind(gamestate);
+            window.onorientationchange = gamestate.resize.bind(gamestate);
         </script>
     </body>
 </html>
