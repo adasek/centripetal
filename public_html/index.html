@@ -32,6 +32,7 @@
 
         <script type="text/javascript" src="bower_components/Matter/build/matter.js"></script>
 
+        <script type="text/javascript" src="class/gamestate.js"></script>
         <script type="text/javascript" src="class/ball.js"></script>
         <script type="text/javascript" src="class/pylon.js"></script>
         <script type="text/javascript" src="class/evelina.js"></script>
@@ -43,137 +44,9 @@
         <canvas id="evelina"></canvas>
         <div id="overlay"></div>
         <script type="text/javascript">
-            // Matter.js module aliases
-            var Engine = Matter.Engine,
-                    World = Matter.World,
-                    Bodies = Matter.Bodies;
+            gamestate = new Gamestate();
 
-            // create a Matter.js engine
-            var engine = Engine.create({
-                render: {
-                    element: document.getElementById('gameArea'),
-                    controller: Matter.Render,
-                    options: {
-                        width: 512,
-                        height: 512
-                    }
-                },
-                timing: {
-                    timeScale: 0.5
-                }
-            });
-
-            var boxA = new Pylon(engine, 0.25, 0.33, 0);
-            var boxB = new Pylon(engine, 0.5, 0.33, 0);
-            var boxC = new Pylon(engine, 0.75, 0.33, 0);
-            var boxD = new Pylon(engine, 0.25, 0.66, 0);
-            var boxE = new Pylon(engine, 0.5, 0.66, 0);
-            var boxF = new Pylon(engine, 0.75, 0.66, 0);
-
-            var player = new Ball(engine, 0.1, 0, 0.05, "gfx/evelina.png");
-            var enemy = new Ball(engine, 0.8, 0, 0.05);
-
-
-            // add all of the bodies to the world
-            World.add(engine.world, [boxA.body, boxB.body, boxC.body, boxD.body, boxE.body, boxF.body]);
-            engine.world.gravity.scale = 0.0005;
-
-
-            var renderOptions = engine.render.options;
-            renderOptions.wireframes = false;
-            renderOptions.showAngleIndicator = false;
-
-            window.onresize = function () {
-                var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-                var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-
-                //always fill screen with respecting aspectRatio
-                var aspectRatio = 1; //w/h
-                var sideH = Math.min(w * aspectRatio, h);
-                var sideW = Math.min(w, h / aspectRatio);
-                var side = Math.min(sideH, sideW);
-
-                if (side > renderOptions.width) {
-                    side = renderOptions.width;
-                }
-                this.render.canvas.style.height = side + "px";
-                this.render.canvas.style.width = side + "px";
-                // this.render.options.width = document.documentElement.clientWidth;
-                // this.render.options.height = document.documentElement.clientHeight;
-            }.bind(engine);
-
-            Matter.Events.on(engine, "beforeUpdate", function (event) {
-                var engine = event.source;
-                var world = engine.world;
-                var gravity = world.gravity;
-
-                player.ai();
-                enemy.ai();
-
-                var myBodies = Matter.Composite.allBodies(world);
-                if (!this.lastTimestamp) {
-                    this.lastTimestamp = 0;
-                }
-                for (var i = 0; i < myBodies.length; i++) {
-                    var body = myBodies[i];
-                    if (typeof body.applyRopeGravity === "function" && body.onRopeGravity > 0) {
-                        //Apply my custom function for any objects currently on rope
-                        body.applyRopeGravity(event.timestamp - this.lastTimestamp,
-                                gravity.x * gravity.scale,
-                                gravity.y * gravity.scale);
-                    }
-                }
-                this.lastTimestamp = event.timestamp;
-            });
-
-
-            Matter.Events.on(engine, "collisionActive", function (event) {
-
-                // change object colours to show those in an active collision (e.g. resting contact)
-                for (var i = 0; i < event.pairs.length; i++) {
-                    var pair = event.pairs[i];
-                    if (pair.bodyA.parentBall !== undefined && pair.bodyB.parentBall !== undefined) {
-                        //collision between two balls
-                        pair.bodyA.parentBall.destroyHook();
-                        pair.bodyB.parentBall.destroyHook();
-                    }
-                }
-
-            });
-
-
-            Matter.Events.on(engine, "afterUpdate", function (event) {
-                player.checkBoundaries();
-                enemy.checkBoundaries();
-                evelina.update();
-            });
-
-
-            var runner = Matter.Runner.create({isFixed: false, deltaMin: 1, deltaMax: 1000});
-            //runner.isFixed=true;
-            Matter.Runner.run(runner, engine);
-
-
-            document.getElementById('overlay').addEventListener("touch", function () {
-                player.controlled = true;
-                player.toggleHook();
-            });
-            document.getElementById('overlay').addEventListener("click", function () {
-                player.controlled = true;
-                player.toggleHook();
-            });
-
-            document.body.onkeyup = function (e) {
-                if (e.keyCode === 32) {
-                    player.controlled = true;
-                    player.toggleHook();
-                }
-            };
-
-
-            //Evelina animation
-            evelina = new Evelina(document.getElementById('evelina'));
-
+            window.onresize = gamestate.resize();
         </script>
     </body>
 </html>
