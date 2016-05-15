@@ -41,7 +41,7 @@ var Evelina = function (canvas) {
     this.happiness = 0;
 
     this.okoLBlink = 0;
-    
+
     /**
      * shrink coefficient
      * @type {number}
@@ -72,7 +72,7 @@ Evelina.prototype.update = function () {
 
     this.frameNr++;
     var currentTime = new Date();
-    var timeDiff = this.lastUpdate - currentTime;
+    var timeDiff = currentTime - this.lastUpdate;
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.drawPart('telo', 1 / 2, 1 / 2);
