@@ -29,8 +29,8 @@ var Evelina = function (canvas) {
     this.loadImage("hlava");
     this.loadImage("telo");
 
-    this.okoL = new Evelina_oko(canvas, 6 / 16, 1 / 8);
-    this.okoR = new Evelina_oko(canvas, 10 / 16, 1 / 8);
+    this.okoL = new Evelina_oko(canvas, 0.11, 0.0045);
+    this.okoR = new Evelina_oko(canvas, -0.11, 0.0045);
 
     this.frameNr = 0;
 
@@ -40,7 +40,8 @@ var Evelina = function (canvas) {
      */
     this.happiness = 0;
 
-    this.okoLBlink = 0;
+    this.blinkTimer = 0;
+    this.blinkRand = Math.random();
 
     /**
      * shrink coefficient
@@ -70,21 +71,40 @@ Evelina.prototype.update = function () {
         }
     }
 
+    //compute timeDiff = number of ms since last frame
     this.frameNr++;
     var currentTime = new Date();
     var timeDiff = currentTime - this.lastUpdate;
+
+    //Determine times to blink
+    //Determine if its time to blink
+    var mean = 1000; //1s?
+    var sigma = 300; //stddev
+    var zValue = this.normalcdf(mean, sigma, this.blinkTimer);
+    if (zValue > this.blinkRand) {
+        this.okoL.blink();
+        this.okoR.blink();
+        this.blinkTimer = 0; //reset blinkTimer
+        this.blinkRand = Math.random();
+    } else {
+        this.blinkTimer += timeDiff;
+    }
+
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    this.drawPart('telo', 1 / 2, 1 / 2);
-    this.drawPart('hlava', 1 / 2, 1 / 8);
+    var bodyPos = this.bodyPos(currentTime);
+    this.drawPart('telo', bodyPos.x, bodyPos.y);
+
+    this.drawPart('hlava', 1 / 2, 1 / 8 + 0.005 * Math.sin(currentTime / 500));
+
     this.drawPart('botaL', 1 / 4, 7 / 8);
     this.drawPart('botaR', 3 / 4, 7 / 8);
 
-    this.okoL.update(timeDiff, this.coeff);
-    this.okoR.update(timeDiff, this.coeff);
+    this.okoL.update(timeDiff, this.coeff, 1 / 2, 1 / 8 + 0.005 * Math.sin(currentTime / 500));
+    this.okoR.update(timeDiff, this.coeff, 1 / 2, 1 / 8 + 0.005 * Math.sin(currentTime / 500));
 
 
-    this.drawMouth(1 / 2, 0.195);
+    this.drawMouth(1 / 2, 0.195 + 0.005 * Math.sin(currentTime / 500));
 
     this.lastUpdate = currentTime;
 };
@@ -100,10 +120,22 @@ Evelina.prototype.drawPart = function (name, centerX, centerY) {
         var cHe = this.images[name].height;
         cWi *= this.coeff;
         cHe *= this.coeff;
-        this.ctx.drawImage(this.images[name], 0, 0, this.images[name].width, this.images[name].height, Math.round(centerX - cWi / 2), Math.round(centerY - cHe / 2), cWi, cHe);
+        this.ctx.drawImage(this.images[name], 0, 0, this.images[name].width, this.images[name].height, (centerX - cWi / 2), (centerY - cHe / 2), cWi, cHe);
     }
 };
 
+/**
+ * Repetetive movement
+ * @param {type} centerX
+ * @param {type} centerY
+ * @returns {undefined}
+ */
+Evelina.prototype.bodyPos = function (currentTime) {
+    var ret = {};
+    ret.x = 1 / 2 + 0.01 * (Math.sin(currentTime / 1000));
+    ret.y = 0.50 + 0.01 * (Math.cos(currentTime / 5000));
+    return ret;
+};
 
 /**
  * Draw a mouth as bezier curve.
@@ -128,4 +160,30 @@ Evelina.prototype.drawMouth = function (centerX, centerY) {
     this.ctx.strokeStyle = 3;
     this.ctx.stroke();
     return;
+};
+
+
+/**
+ * Probablity that in x miliseconds blink was performed (CDF of normal distribution)
+ * @param {number} mean
+ * @param {number} sigma
+ * @param {number} x
+ * @returns {undefined}
+ */
+Evelina.prototype.normalcdf = function (mean, sigma, x)
+{
+    var z = (x - mean) / Math.sqrt(2 * sigma * sigma);
+    var t = 1 / (1 + 0.3275911 * Math.abs(z));
+    var a1 = 0.254829592;
+    var a2 = -0.284496736;
+    var a3 = 1.421413741;
+    var a4 = -1.453152027;
+    var a5 = 1.061405429;
+    var erf = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-z * z);
+    var sign = 1;
+    if (z < 0)
+    {
+        sign = -1;
+    }
+    return (1 / 2) * (1 + sign * erf);
 };
