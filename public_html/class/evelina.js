@@ -90,15 +90,19 @@ Evelina.prototype.update = function () {
         this.blinkTimer += timeDiff;
     }
 
+    this.ctx.strokeStyle = "blue";
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.beginPath();
+    this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2, this.canvas.height * 0.5, 0, 2 * Math.PI);
+    this.ctx.stroke();
 
     var bodyPos = this.bodyPos(currentTime);
     this.drawPart('telo', bodyPos.x, bodyPos.y);
 
     this.drawPart('hlava', 1 / 2, 1 / 8 + 0.005 * Math.sin(currentTime / 500));
 
-    this.drawPart('botaL', 1 / 4, 7 / 8);
-    this.drawPart('botaR', 3 / 4, 7 / 8);
+    this.drawPart('botaL', 1 / 4 + 0.02 * Math.sin(currentTime / 713), 7 / 8 + 0.02 * Math.sin(currentTime / 1200));
+    this.drawPart('botaR', 3 / 4 + 0.009 * Math.sin(currentTime / 713), 7 / 8);
 
     this.okoL.update(timeDiff, this.coeff, 1 / 2, 1 / 8 + 0.005 * Math.sin(currentTime / 500));
     this.okoR.update(timeDiff, this.coeff, 1 / 2, 1 / 8 + 0.005 * Math.sin(currentTime / 500));
