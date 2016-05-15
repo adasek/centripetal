@@ -27,8 +27,10 @@ var Evelina = function (canvas) {
     this.loadImage("botaL");
     this.loadImage("botaR");
     this.loadImage("hlava");
-    this.loadImage("oko");
     this.loadImage("telo");
+
+    this.okoL = new Evelina_oko(canvas, 6 / 16, 1 / 8);
+    this.okoR = new Evelina_oko(canvas, 10 / 16, 1 / 8);
 
     this.frameNr = 0;
 
@@ -37,6 +39,14 @@ var Evelina = function (canvas) {
      * @type {number}
      */
     this.happiness = 0;
+
+    this.okoLBlink = 0;
+    
+    /**
+     * shrink coefficient
+     * @type {number}
+     */
+    this.coeff = 0.5;
 
 };
 
@@ -49,8 +59,9 @@ Evelina.prototype.loadImage = function (name) {
  * Updates animation and redraw
  */
 Evelina.prototype.update = function () {
-    if (this.frameNr % 100 === 0) {
-        this.happiness += Math.random() % 0.4 - 0.19;
+    if (this.frameNr % 50 === 0) {
+        this.okoLBlink = 1;
+        this.happiness += Math.random() % 0.4 - 0.18;
         if (this.happiness > 1) {
             this.happiness = 1;
         }
@@ -58,7 +69,7 @@ Evelina.prototype.update = function () {
             this.happiness = -1;
         }
     }
-    
+
     this.frameNr++;
     var currentTime = new Date();
     var timeDiff = this.lastUpdate - currentTime;
@@ -68,8 +79,10 @@ Evelina.prototype.update = function () {
     this.drawPart('hlava', 1 / 2, 1 / 8);
     this.drawPart('botaL', 1 / 4, 7 / 8);
     this.drawPart('botaR', 3 / 4, 7 / 8);
-    this.drawPart('oko', 6 / 16, 1 / 8);
-    this.drawPart('oko', 10 / 16, 1 / 8);
+
+    this.okoL.update(timeDiff, this.coeff);
+    this.okoR.update(timeDiff, this.coeff);
+
 
     this.drawMouth(1 / 2, 0.195);
 
@@ -81,14 +94,12 @@ Evelina.prototype.drawPart = function (name, centerX, centerY) {
     centerX = this.canvas.width * centerX;
     centerY = this.canvas.height * centerY;
 
-    var cC = 0.5; //coeficient
 
     if (this.images[name].complete) {
         var cWi = this.images[name].width;
         var cHe = this.images[name].height;
-        cWi *= cC;
-        cHe *= cC;
-
+        cWi *= this.coeff;
+        cHe *= this.coeff;
         this.ctx.drawImage(this.images[name], 0, 0, this.images[name].width, this.images[name].height, Math.round(centerX - cWi / 2), Math.round(centerY - cHe / 2), cWi, cHe);
     }
 };
@@ -107,12 +118,14 @@ Evelina.prototype.drawMouth = function (centerX, centerY) {
 
 
     this.ctx.beginPath();
-    this.ctx.moveTo(centerX - 0.1 * this.canvas.width, centerY);
+    this.ctx.moveTo(centerX - (0.1 - Math.abs(this.happiness / 20)) * this.canvas.width, centerY);
     this.ctx.bezierCurveTo(
             centerX, centerY + (this.happiness / 100) * this.canvas.height,
             centerX, centerY + (this.happiness / 100) * this.canvas.height,
-            centerX + 0.1 * this.canvas.width, centerY
+            centerX + (0.1 - Math.abs(this.happiness / 20)) * this.canvas.width, centerY
             );
+    this.ctx.strokeStyle = "red";
+    this.ctx.strokeStyle = 3;
     this.ctx.stroke();
     return;
 };
