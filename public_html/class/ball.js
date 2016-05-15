@@ -14,9 +14,10 @@
  * @param {number} y - y coordinate 
  * @param {number} r - radius
  * @param {string} textureFile - png image containing texture
+ * @param {string} id - identifier of this ball. Player has id=0
  * @returns {Ball}
  */
-var Ball = function (engine, x, y, r, textureFile) {
+var Ball = function (engine, x, y, r, textureFile, id) {
     this.id = Math.round(Math.random() * 1000);
     this.engine = engine;
     this.world = engine.world;
@@ -134,6 +135,7 @@ Ball.prototype.killed = function () {
         this.createBody(this.initX, this.initY, this.initR);
         Matter.Composite.add(this.world, this.body);
     }
+    this.gamestate.ballKilledSignal(this.id);
     return true;
 };
 

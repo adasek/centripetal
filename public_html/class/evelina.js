@@ -51,6 +51,12 @@ var Evelina = function (canvas) {
      */
     this.coeff = 0.5;
 
+    /**
+     * Render Evelina?
+     * @type {Boolean}
+     */
+    this.render = true;
+
 };
 
 Evelina.prototype.loadImage = function (name) {

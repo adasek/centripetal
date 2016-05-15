@@ -184,6 +184,20 @@ Gamestate.prototype.gameOverSignal = function () {
     document.getElementById('againA').onclick = this.restart.bind(this);
 };
 
+/**
+ * Ball was killed
+ * @param {string} id - id of the Ball
+ * @returns {undefined}
+ */
+Gamestate.prototype.ballKilledSignal = function (id) {
+    if (id !== 0) {
+        this.evelina.happiness += 0.5;
+        this._scoreNoTime += 100;
+    } else {
+        //todo:makeSad and makeHappy functions of Evelina
+        this.evelina.happiness -= 0.5;
+    }
+};
 
 Gamestate.prototype.restart = function (evt) {
     //destroy everything that is mine
@@ -238,12 +252,14 @@ Gamestate.prototype.restart = function (evt) {
      * (player is also in this.balls array)
      * @type{Ball}
      */
-    this.player = new Ball(this.engine, 0.1, 0, 0.05, "gfx/evelina.png");
+    this.player = new Ball(this.engine, 0.1, 0, 0.05, "gfx/evelina.png", 0);
     this.player.gamestate = this;
     this.balls.push(this.player);
 
     //Creating enemies
-    this.balls.push(new Ball(this.engine, 0.8, 0, 0.05));
+    var enemy1 = new Ball(this.engine, 0.8, 0, 0.05, "", 1);
+    enemy1.gamestate = this;
+    this.balls.push(enemy1);
 
 
     // add all of the bodies to the world
