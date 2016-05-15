@@ -17,6 +17,7 @@
  * @returns {Ball}
  */
 var Ball = function (engine, x, y, r, textureFile) {
+    this.id = Math.round(Math.random() * 1000);
     this.engine = engine;
     this.world = engine.world;
     this.initX = x * this.engine.render.options.width;
@@ -108,8 +109,10 @@ Ball.prototype.checkBoundaries = function () {
             this.engine.render.bounds.min.x > this.body.position.x + this.initR ||
             this.engine.render.bounds.max.x < this.body.position.x - this.initR
             ) {
-        this.killed();
+        return this.killed();
+
     }
+    return true;
 };
 
 Ball.prototype.killed = function () {
@@ -117,6 +120,7 @@ Ball.prototype.killed = function () {
         this.lives--;
         if (this.lives < 0) {
             this.gamestate.gameOverSignal();
+            return false;
         }
     }
 
@@ -130,6 +134,7 @@ Ball.prototype.killed = function () {
         this.createBody(this.initX, this.initY, this.initR);
         Matter.Composite.add(this.world, this.body);
     }
+    return true;
 };
 
 Ball.prototype.createBody = function (x, y, r) {
@@ -140,7 +145,6 @@ Ball.prototype.createBody = function (x, y, r) {
     this.body.friction = 0;
     Matter.Body.setAngularVelocity(this.body, 0.01);
     Matter.Body.setMass(this.body, 5);
-    //console.log(r);
     if (this.textureFile && this.textureFile.length && this.textureFile.length > 0) {
         this.body.render.sprite.texture = this.textureFile;
     }
@@ -155,7 +159,6 @@ Ball.prototype.createBody = function (x, y, r) {
      * @returns {undefined}
      */
     this.body.applyRopeGravity = function (timeDiff, gx, gy) {
-
 
 
         //this is Ball.body
