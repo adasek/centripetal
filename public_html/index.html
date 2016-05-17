@@ -63,6 +63,7 @@
         <script type="text/javascript" src="class/pylon.js"></script>
         <script type="text/javascript" src="class/evelina.js"></script>
         <script type="text/javascript" src="class/evelina_oko.js"></script>
+        <script type="text/javascript" src="class/overlay.js"></script>
 
     </head>
     <body>
@@ -71,6 +72,7 @@
         <div id="statusBar">Score: <span id="score"></span>, &#9829;<span id="lives"></span></div>
         <div id="overlay"></div>
         <script type="text/javascript">
+            
             gamestate = new Gamestate();
 
             window.onresize = gamestate.resize.bind(gamestate);

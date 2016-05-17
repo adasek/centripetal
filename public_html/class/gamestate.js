@@ -55,9 +55,11 @@ var Gamestate = function () {
      */
     this.startTime = new Date();
 
-
+    this.overlay = new Overlay();
 
     this.restart();
+
+    this.overlay.showBeginScreen(this);
 
     this.resize();
 };
@@ -172,16 +174,7 @@ Gamestate.prototype.gameOverSignal = function () {
     this.engine.render.canvas.parentElement.removeChild(this.engine.render.canvas);
     Matter.Engine.clear(this.engine);
     this.gameOver = true;
-
-    document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.3)';
-    this.endScreen = document.createElement('div');
-    this.endScreen.setAttribute('id', 'endScreen');
-    this.endScreen.innerHTML = "Dospěl jsi s Evelínou ke <strong>SCORE " + (Math.round(this.getScore())) +
-            "</strong>" + "<p><a href=\"#\" id=\"againA\">Chceš to zkusit znovu?</a></p>" +
-            "<p>A už jsi evaluoval? Čím více dotazníků, tím lepší bonusy :)</p>";
-
-    document.getElementById('overlay').appendChild(this.endScreen);
-    document.getElementById('againA').onclick = this.restart.bind(this);
+    this.overlay.showEndScreen(this);
 };
 
 /**
@@ -205,10 +198,7 @@ Gamestate.prototype.restart = function (evt) {
         //this.engine.render.canvas.parentElement.removeChild(this.engine.render.canvas);
         Matter.Engine.clear(this.engine);
     }
-    if (this.endScreen) {
-        this.endScreen.parentElement.removeChild(this.endScreen);
-        document.getElementById('overlay').style.backgroundColor = 'transparent';
-    }
+    this.overlay.hide();
 
     this.resize();
 
@@ -286,14 +276,31 @@ Gamestate.prototype.restart = function (evt) {
     this.player.lives = 3;
 
 
+    this.showScore();
     this.evelina = new Evelina(document.getElementById('evelina'));
+    this.resize();
+    //Update evelina when we have resources
+    setTimeout(this.evelina.update.bind(this.evelina),1);
+    setTimeout(this.evelina.update.bind(this.evelina),1000);
+    setTimeout(this.evelina.update.bind(this.evelina),5000);
+
+    this.runner = Matter.Runner.create({isFixed: false, deltaMin: 1, deltaMax: 16});
+    Matter.Runner.tick(this.runner, this.engine, 0);
+
+};
+
+
+Gamestate.prototype.start = function () {
+    this.overlay.hide();
+    Matter.Runner.run(this.runner, this.engine);
+};
+
+
+Gamestate.prototype.restartAndStart = function (evt) {
 
     if (evt && typeof evt.stopPropagation === "function") {
         evt.stopPropagation();
     }
-
-    //if (++this.inst === 1) {
-    this.runner = Matter.Runner.create({isFixed: false, deltaMin: 1, deltaMax: 16});
-    Matter.Runner.run(this.runner, this.engine);
-    //}
+    this.restart();
+    this.start();
 };
