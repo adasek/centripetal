@@ -1,11 +1,51 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Centripetal game</title>
+        <title>Rotarium</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href='https://fonts.googleapis.com/css?family=Raleway:400,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
         <link rel="icon" href="#">
+
+        <script>
+            window.fbAsyncInit = function () {
+                FB.init({
+                    appId: '1375531122463491',
+                    xfbml: true,
+                    version: 'v2.6'
+                });
+            };
+
+            (function (d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) {
+                    return;
+                }
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "//connect.facebook.net/en_US/sdk.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+
+            function shareScore() {
+                FB.ui(
+                        {
+                            method: 'share',
+                            href: 'https://developers.facebook.com/docs/',
+                        },
+                        // callback
+                                function (response) {
+                                    if (response && !response.error_message) {
+                                        alert('Posting completed.');
+                                    } else {
+                                        alert('Error while posting.');
+                                    }
+                                }
+                        );
+
+                    }
+
+        </script>
 
         <style type="text/css">
             html,body {margin:0;
@@ -49,11 +89,11 @@
                 font-family:Raleway, Arial, Sans-serif;
                 background-color:white;
                 width:50%;
-                height: 50%;
+                height: 80%;
                 left: 25%;
                 position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
+                top: 10%;
+                transform: translateY(-5%);
                 border-radius: 5%;
                 padding:3%;
                 min-height:12em;
@@ -64,7 +104,7 @@
             }
             #overlayText * {margin:0.1em;}
 
-            #enterGameA{
+            #enterGameA,#againA{
                 display:block;
                 text-align:right;
                 padding:1em;
@@ -90,6 +130,12 @@
         <script type="text/javascript" src="class/evelina.js"></script>
         <script type="text/javascript" src="class/evelina_oko.js"></script>
         <script type="text/javascript" src="class/overlay.js"></script>
+
+        <meta property="og:url"           content="http://rotarium.cz" />
+        <meta property="og:type"          content="website" />
+        <meta property="og:title"         content="Rotarium" />
+        <meta property="og:description"   content="Hra na podporu studentských evaluací FFUK" />
+        <meta property="og:image"         content="http://rotarium.cz/gfx/evelina/evelina_hlava.png" />
 
     </head>
     <body>
