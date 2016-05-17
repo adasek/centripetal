@@ -31,14 +31,15 @@
                 FB.ui(
                         {
                             method: 'share',
-                            href: 'https://developers.facebook.com/docs/',
+                            href: 'http://rotarium.cz/',
+                            quote: "Evelína pod mým vedením získala "+gamestate.getScore()+" bodů!"
                         },
                         // callback
                                 function (response) {
                                     if (response && !response.error_message) {
-                                        alert('Posting completed.');
+                                        console.log('Posláno na facebook');
                                     } else {
-                                        alert('Error while posting.');
+                                        console.log('Chyba při sdílení na facebook');
                                     }
                                 }
                         );
@@ -104,15 +105,22 @@
             }
             #overlayText * {margin:0.1em;}
 
-            #enterGameA,#againA{
+            #enterGameA,#againA,#hodnotKurzy{
                 display:block;
                 text-align:right;
-                padding:1em;
+                padding:0.2em 1em;
                 font-size:200%;
                 font-weight:bold;
                 color: rgb(213,159,15);
             }
-
+            #hodnotKurzy {
+                text-align:left;
+                padding-left:0em;  
+                margin-left:0em;                
+            }
+            #fb_logo {height:1.3em;width:auto}
+            .fb_share {color: rgb(213,159,15);}
+            
             #overlayText strong{
                 color: rgb(213,159,15);
             }

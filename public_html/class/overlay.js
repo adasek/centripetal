@@ -40,14 +40,14 @@ Overlay.prototype.hide = function () {
 Overlay.prototype.showEndScreen = function (gamestate) {
     var html = "";
     html += "<p>Evelína pod tvým vedením získala <strong>skóre " + (Math.round(gamestate.getScore())) + "</strong></p>";
-    html += "<div class=\"fb-share-button\"";
-    html += "data-href=\"http://rotarium.cz/\""
-    html += "data-layout=\"button_count\">"
-    html += "</div>";
+    html += "<p><a href=\"javascript:shareScore()\" class=\"fb_share\">Sdílet <img src=\"FB-f-Logo__blue_29.png\" id=\"fb_logo\" alt=\"facebook\" ></a>";
+    html += "</p>";
 
     html += "<a href=\"#\" id=\"againA\">Hrát znovu</a>";
+    
     html += "<hr>";
     html += "<h2>Ohodnoť kurzy letního semestru a odemkni další level!</h2>";
+    html += "<p><a href=\"https://cas.cuni.cz/cas/login?service=http%3A%2F%2Fhodnoceni.ff.cuni.cz%2F\" id=\"hodnotKurzy\">Hodnotit kurzy</a></p>"
     html += "<p>S každými 2.000 odeslaných dotazníků čeká Evelínu nová výzva.</p>";
     html += "<ul>";
     html += "<li class=\"unfinished\">&nbsp;4.000  kolomaz</li>";
