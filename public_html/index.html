@@ -4,7 +4,7 @@
         <title>Centripetal game</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+        <link href='https://fonts.googleapis.com/css?family=Raleway:400,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
         <link rel="icon" href="#">
 
         <style type="text/css">
@@ -12,6 +12,7 @@
                        padding:0;
                        overflow: hidden;
                        background-color:#aaaaaa;
+                       font-family:Raleway, Arial, Sans-serif;
             }
 
             #overlay {position:fixed;width:100%;height:100%;z-index:100}
@@ -44,7 +45,8 @@
                 text-align:right;
             }
 
-            #endScreen {
+            #overlayText {
+                font-family:Raleway, Arial, Sans-serif;
                 background-color:white;
                 width:50%;
                 height: 50%;
@@ -52,6 +54,30 @@
                 position: absolute;
                 top: 50%;
                 transform: translateY(-50%);
+                border-radius: 5%;
+                padding:3%;
+                min-height:12em;
+                color: rgb(0,45,86);
+            }
+            #overlayText h1 {
+                color: rgb(213,159,15);
+            }
+            #overlayText * {margin:0.1em;}
+
+            #enterGameA{
+                display:block;
+                text-align:right;
+                padding:1em;
+                font-size:200%;
+                font-weight:bold;
+                color: rgb(213,159,15);
+            }
+
+            #overlayText strong{
+                color: rgb(213,159,15);
+            }
+            #enterGameA:hover {
+                color: rgb(0,0,0);
             }
 
         </style>
@@ -72,7 +98,7 @@
         <div id="statusBar">Score: <span id="score"></span>, &#9829;<span id="lives"></span></div>
         <div id="overlay"></div>
         <script type="text/javascript">
-            
+
             gamestate = new Gamestate();
 
             window.onresize = gamestate.resize.bind(gamestate);

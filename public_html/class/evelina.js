@@ -78,7 +78,6 @@ Evelina.prototype.hide = function () {
  */
 Evelina.prototype.update = function () {
     if (!this.render) {
-        console.log("n");
         return;
     }
 
