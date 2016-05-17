@@ -292,6 +292,7 @@ Gamestate.prototype.restart = function (evt) {
 
 Gamestate.prototype.start = function () {
     this.overlay.hide();
+    this.startTime = new Date();
     Matter.Runner.run(this.runner, this.engine);
 };
 
