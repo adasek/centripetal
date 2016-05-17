@@ -175,6 +175,11 @@ Gamestate.prototype.gameOverSignal = function () {
     Matter.Engine.clear(this.engine);
     this.gameOver = true;
     this.overlay.showEndScreen(this);
+
+    if (ga) {
+        ga('set', {page: '/end', title: "Game ended"});
+        ga('send', 'pageview');
+    }
 };
 
 /**
@@ -280,9 +285,9 @@ Gamestate.prototype.restart = function (evt) {
     this.evelina = new Evelina(document.getElementById('evelina'));
     this.resize();
     //Update evelina when we have resources
-    setTimeout(this.evelina.update.bind(this.evelina),1);
-    setTimeout(this.evelina.update.bind(this.evelina),1000);
-    setTimeout(this.evelina.update.bind(this.evelina),5000);
+    setTimeout(this.evelina.update.bind(this.evelina), 1);
+    setTimeout(this.evelina.update.bind(this.evelina), 1000);
+    setTimeout(this.evelina.update.bind(this.evelina), 5000);
 
     this.runner = Matter.Runner.create({isFixed: false, deltaMin: 1, deltaMax: 16});
     Matter.Runner.tick(this.runner, this.engine, 0);
@@ -294,6 +299,11 @@ Gamestate.prototype.start = function () {
     this.overlay.hide();
     this.startTime = new Date();
     Matter.Runner.run(this.runner, this.engine);
+
+    if (ga) {
+        ga('set', {page: '/start', title: "Game started"});
+        ga('send', 'pageview');
+    }
 };
 
 
