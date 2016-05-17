@@ -32,7 +32,7 @@
                         {
                             method: 'share',
                             href: 'http://rotarium.cz/',
-                            quote: "Evelína pod mým vedením získala " + gamestate.getScore() + " bodů!"
+                            quote: "Evelína pod mým vedením získala " + (Math.round(gamestate.getScore())) + " bodů!"
                         },
                 // callback
                         function (response) {
