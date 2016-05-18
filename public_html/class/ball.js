@@ -199,6 +199,7 @@ Ball.prototype.createBody = function (x, y, r) {
     //enemy color
     if (this.id > 0) {
         this.body.render.fillStyle = "#ff9999";
+        this.body.render.strokeStyle = "#ff9999";
     } else {
         //player texture
         this.body.render.sprite.texture = this.texture;
