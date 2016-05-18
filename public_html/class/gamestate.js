@@ -162,7 +162,7 @@ Gamestate.prototype.collisionActive = function (event) {
  * @returns {Number}
  */
 Gamestate.prototype.getScore = function () {
-    return this._scoreNoTime + ((new Date() - this.startTime) / 1000);
+    return this._scoreNoTime + ((new Date() - this.startTime) / 100);
 };
 
 Gamestate.prototype.showScore = function () {
@@ -197,7 +197,7 @@ Gamestate.prototype.gameOverSignal = function () {
 Gamestate.prototype.ballKilledSignal = function (id) {
     if (id !== 0) {
         this.evelina.happiness += 0.5;
-        this._scoreNoTime += 100;
+        this._scoreNoTime += 1000;
     } else {
         //todo:makeSad and makeHappy functions of Evelina
         this.evelina.happiness -= 0.5;
