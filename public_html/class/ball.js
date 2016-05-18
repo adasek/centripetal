@@ -18,7 +18,7 @@
  * @returns {Ball}
  */
 var Ball = function (engine, x, y, r, textureFile, id) {
-    this.id = Math.round(Math.random() * 1000);
+    this.id = id;
     this.engine = engine;
     this.world = engine.world;
     this.initX = x * this.engine.render.options.width;

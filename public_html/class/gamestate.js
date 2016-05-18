@@ -258,8 +258,11 @@ Gamestate.prototype.restart = function (evt) {
 
     //Creating enemies
     var enemy1 = new Ball(this.engine, 0.8, 0, 0.05, "", 1);
+    var enemy2 = new Ball(this.engine, 0.4, 0, 0.05, "", 1);
     enemy1.gamestate = this;
+    enemy2.gamestate =this;
     this.balls.push(enemy1);
+    this.balls.push(enemy2);
 
 
     // add all of the bodies to the world
