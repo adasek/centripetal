@@ -184,7 +184,7 @@ Gamestate.prototype.gameOverSignal = function () {
     this.overlay.showEndScreen(this);
 
     if (ga) {
-        ga('set', {page: '/end', title: "Game ended"});
+        ga('set', {page: '/end/' + Math.round(this.getScore()), title: "Game ended"});
         ga('send', 'pageview');
     }
 };
