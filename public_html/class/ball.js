@@ -246,7 +246,7 @@ Ball.prototype.bump = function (depth) {
     if (this.hooked) {
         this.toggleHook();
     }
-    this.collisionState += 1000 * depth; //in miliseconds
+    this.collisionState += 500 * depth; //in miliseconds
 
     if (this.id > 0) {
         this.body.render.fillStyle = "#ff3333";
