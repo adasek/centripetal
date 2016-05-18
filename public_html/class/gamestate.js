@@ -164,8 +164,13 @@ Gamestate.prototype.getScore = function () {
 };
 
 Gamestate.prototype.showScore = function () {
-    document.getElementById('score').innerHTML = (Math.round(this.getScore()));
-    document.getElementById('lives').innerHTML = (this.player.lives >= 0) ? this.player.lives : 0;
+    var html = "";
+    html += "Skóre: <span id=\"score\">";
+    html += (Math.round(this.getScore()));
+    html += "</span>, &#9829;<span id=\"lives\">";
+    html += (this.player.lives >= 0) ? this.player.lives : 0;
+    html += "</span>";
+    document.getElementById("statusBar").innerHTML = html;
 };
 
 Gamestate.prototype.gameOverSignal = function () {
