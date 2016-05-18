@@ -13,18 +13,49 @@
  * @param {number} x - x coordinate
  * @param {number} y - y coordinate 
  * @param {number} r - radius
- * @param {string} textureFile - png image containing texture
+ * @param {string[]} textures - png image containing texture
  * @param {string} id - identifier of this ball. Player has id=0
  * @returns {Ball}
  */
-var Ball = function (engine, x, y, r, textureFile, id) {
+var Ball = function (engine, x, y, r, textures, id) {
     this.id = id;
     this.engine = engine;
     this.world = engine.world;
     this.initX = x * this.engine.render.options.width;
     this.initY = y * this.engine.render.options.height;
     this.initR = r * this.engine.render.options.width;
-    this.textureFile = textureFile;
+
+    this.texture = null;
+    this.textureBump = null;
+
+    if (textures !== undefined && textures !== null && textures.normal && textures.bump) {
+        //load texture
+        this.textureImage = new Image();
+        this.textureImageBump = new Image();
+
+        function textureLoaded(tImage, type) {
+            //this is ball
+            var canvas = document.createElement('canvas');
+            canvas.width = this.getWidth();
+            canvas.height = this.getHeight();
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(tImage, 0, 0, tImage.width, tImage.height, 0, 0, this.getWidth(), this.getHeight());
+            var imageDataURL = canvas.toDataURL();
+            if (type === "normal") {
+                this.texture = imageDataURL;
+            } else if (type === "bump") {
+                this.textureBump = imageDataURL;
+            } else {
+                throw "Unknown texture type";
+            }
+        }
+        this.textureImage.onload = textureLoaded.bind(this, this.textureImage, "normal");
+        this.textureImageBump.onload = textureLoaded.bind(this, this.textureImageBump, "bump");
+
+        this.textureImage.src = textures.normal;
+        this.textureImageBump.src = textures.bump;
+    }
+
     this.createBody(
             this.initX,
             this.initY,
@@ -37,12 +68,28 @@ var Ball = function (engine, x, y, r, textureFile, id) {
 
     this.timeHooked = new Date();
     this.timeUnhooked = new Date();
+
+
+
+
+};
+
+Ball.prototype.getWidth = function () {
+    return this.initR * 2;
+};
+
+Ball.prototype.getHeight = function () {
+    return this.initR * 2;
 };
 
 Ball.prototype.toggleHook = function () {
     var world = this.world;
 
     if (!this.hooked) {
+        if (this.collisionState > 0) {
+            return;
+        }
+
         //find a nearest
         //todo: to a separate function
         var target = null;
@@ -147,11 +194,19 @@ Ball.prototype.createBody = function (x, y, r) {
     this.body.friction = 0;
     Matter.Body.setAngularVelocity(this.body, 0.01);
     Matter.Body.setMass(this.body, 5);
-    if (this.textureFile && this.textureFile.length && this.textureFile.length > 0) {
-        this.body.render.sprite.texture = this.textureFile;
-    }
-    this.body.parentBall = this;
 
+    this.body.parentBall = this;
+    //enemy color
+    if (this.id > 0) {
+        this.body.render.fillStyle = "#ff9999";
+    } else {
+        //player texture
+        this.body.render.sprite.texture = this.texture;
+    }
+
+    //Reset collision state
+    this.collisionState = 0; //if > 0 player cannot hook
+    this.lastTick = new Date();
 
     /**
      * Disable effect of ordinary gravity and apply my special rope gravity
@@ -184,12 +239,36 @@ Ball.prototype.createBody = function (x, y, r) {
 /**
  * Violently destroy the hook = by collision with another object
  * This Ball has to be unhookable some time depending on current speed
+ * @param {number} depth - epicness of bump
  * @returns {undefined}
  */
-Ball.prototype.destroyHook = function () {
+Ball.prototype.bump = function (depth) {
     if (this.hooked) {
         this.toggleHook();
     }
+    this.collisionState += 1000 * depth; //in miliseconds
+
+    if (this.id > 0) {
+        this.body.render.fillStyle = "#ff3333";
+    } else {
+        //player texture
+        this.body.render.sprite.texture = this.textureBump;
+    }
+};
+
+Ball.prototype.isBumped = function () {
+    var ret = false;
+    this.thisTick = new Date();
+    if (this.collisionState > 0) {
+        this.collisionState -= this.thisTick - this.lastTick;
+        if (this.collisionState <= 0) {
+            this.collisionState = 0;
+        } else {
+            ret = true;
+        }
+    }
+    this.lastTick = this.thisTick;
+    return ret;
 };
 
 /**
@@ -197,6 +276,30 @@ Ball.prototype.destroyHook = function () {
  * @returns {undefined}
  */
 Ball.prototype.ai = function () {
+    if (this.isBumped()) {
+        if (this.id > 0) {
+            this.body.render.fillStyle = "#ff3333";
+        } else {
+            //player texture 
+            if (this.textureBump !== null) {
+                this.body.render.sprite.texture = this.textureBump;
+            } else {
+                this.body.render.fillStyle = "#33ff33";
+            }
+        }
+    } else {
+        if (this.id > 0) {
+            this.body.render.fillStyle = "#ff9999";
+        } else {
+            //player texture
+            if (this.texture !== null) {
+                this.body.render.sprite.texture = this.texture;
+            } else {
+                this.body.render.fillStyle = "#99ff99";
+            }
+        }
+    }
+
     if (this.controlled) {
         return;
     }

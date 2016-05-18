@@ -146,9 +146,11 @@ Gamestate.prototype.collisionActive = function (event) {
         var pair = event.pairs[i];
         if (pair.bodyA.parentBall !== undefined && pair.bodyB.parentBall !== undefined) {
             //collision between two balls
-            pair.bodyA.parentBall.destroyHook();
-            pair.bodyB.parentBall.destroyHook();
-            //todo: cannot use Hook for some time
+            var depth = pair.collision.depth ? pair.collision.depth : 0.00000001;
+
+            //cannot use Hook for some time
+            pair.bodyA.parentBall.bump(depth);
+            pair.bodyB.parentBall.bump(depth);
 
             //todo: if one of them player, bump Evelina
         }
@@ -252,7 +254,7 @@ Gamestate.prototype.restart = function (evt) {
      * (player is also in this.balls array)
      * @type{Ball}
      */
-    this.player = new Ball(this.engine, 0.1, 0, 0.05, "gfx/evelina.png", 0);
+    this.player = new Ball(this.engine, 0.1, 0, 0.05, {"normal": "gfx/player.png", "bump": "gfx/player_bump.png"}, 0);
     this.player.gamestate = this;
     this.balls.push(this.player);
 
@@ -260,7 +262,7 @@ Gamestate.prototype.restart = function (evt) {
     var enemy1 = new Ball(this.engine, 0.8, 0, 0.05, "", 1);
     var enemy2 = new Ball(this.engine, 0.4, 0, 0.05, "", 1);
     enemy1.gamestate = this;
-    enemy2.gamestate =this;
+    enemy2.gamestate = this;
     this.balls.push(enemy1);
     this.balls.push(enemy2);
 
