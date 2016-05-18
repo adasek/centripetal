@@ -119,7 +119,7 @@ Ball.prototype.checkBoundaries = function () {
 Ball.prototype.killed = function () {
     if (this.lives !== undefined) {
         this.lives--;
-        if (this.lives < 0) {
+        if (this.lives <= 0) {
             this.gamestate.gameOverSignal();
             return false;
         }
