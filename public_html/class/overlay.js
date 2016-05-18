@@ -39,8 +39,8 @@ Overlay.prototype.hide = function () {
 
 Overlay.prototype.showEndScreen = function (gamestate) {
     var html = "";
-    html += "<p>Evelína pod tvým vedením získala <strong>skóre " + (Math.round(gamestate.getScore())) + "</strong></p>";
-    html += "<p><a href=\"javascript:shareScore()\" class=\"fb_share\">Sdílet <img src=\"FB-f-Logo__blue_29.png\" id=\"fb_logo\" alt=\"facebook\" ></a>";
+    html += "<p>Evelína pod tvým vedením získala <strong>" + (Math.round(gamestate.getScore())) + " bodů.</strong></p>";
+    html += "<p><a href=\"javascript:shareScore()\" class=\"fb_share\"><span>Sdílet</span> <img src=\"FB-f-Logo__blue_29.png\" id=\"fb_logo\" alt=\"facebook\" ></a>";
     html += "</p>";
 
     html += "<a href=\"#\" id=\"againA\">Hrát znovu</a>";
