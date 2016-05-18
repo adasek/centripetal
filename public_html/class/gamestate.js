@@ -162,7 +162,7 @@ Gamestate.prototype.collisionActive = function (event) {
  * @returns {Number}
  */
 Gamestate.prototype.getScore = function () {
-    return this._scoreNoTime + ((new Date() - this.startTime) / 100);
+    return this._scoreNoTime + ((new Date() - this.startTime) / 1000);
 };
 
 Gamestate.prototype.showScore = function () {
