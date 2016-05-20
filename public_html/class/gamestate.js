@@ -57,6 +57,9 @@ var Gamestate = function () {
 
     this.overlay = new Overlay();
 
+    this.tickNum=0;
+    this.simTime=0;
+
     this.restart();
 
     this.overlay.showBeginScreen(this);
@@ -118,7 +121,18 @@ Gamestate.prototype.beforeUpdate = function (event) {
                     gravity.y * gravity.scale);
         }
     }
-    this.lastTimestamp = event.timestamp;
+this.tickNum++;
+thisTime=event.timestamp - this.lastTimestamp;
+if(thisTime<500){
+ //limit
+  this.simTime+= event.timestamp - this.lastTimetamp;  
+}else{
+  this.simTime+=500;
+}
+
+  this.lastTimestamp = event.timestamp;
+	
+   
 };
 
 
@@ -129,7 +143,10 @@ Gamestate.prototype.afterUpdate = function () {
         }
     }
 
+this.tickNum++;
+if(this.tickNum%2===0){
     this.evelina.update();
+}
 
     this.showScore();
     this.runner.deltaMax = 1000;//fixed bug in Matter (after restart former time was used and biiiig tick was rendered)
@@ -162,7 +179,8 @@ Gamestate.prototype.collisionActive = function (event) {
  * @returns {Number}
  */
 Gamestate.prototype.getScore = function () {
-    return this._scoreNoTime + ((new Date() - this.startTime) / 100);
+	//    return this._scoreNoTime + ((new Date() - this.startTime) / 100);
+	return this._scoreNoTime + ((this.tickNum) / 6);
 };
 
 Gamestate.prototype.showScore = function () {
@@ -180,6 +198,10 @@ Gamestate.prototype.gameOverSignal = function () {
     Matter.Events.off(this.engine);
     this.engine.render.canvas.parentElement.removeChild(this.engine.render.canvas);
     Matter.Engine.clear(this.engine);
+
+    this.evelina.happiness+=0.6;
+    this.evelina.update();
+    
     this.gameOver = true;
     this.overlay.showEndScreen(this);
 

@@ -84,8 +84,8 @@ Evelina.prototype.update = function () {
     if (this.frameNr % 50 === 0) {
         this.okoLBlink = 1;
         this.happiness += Math.random() % 0.4 - 0.18;
-        if (this.happiness > 1) {
-            this.happiness = 1;
+        if (this.happiness > 0.8) {
+            this.happiness = 0.8;
         }
         if (this.happiness < -1) {
             this.happiness = -1;
@@ -162,7 +162,17 @@ Evelina.prototype.drawPart = function (name, centerX, centerY, rotation) {
             this.ctx.translate(-centerX, -centerY);
         }
 
-        this.ctx.drawImage(this.images[name], 0, 0, this.images[name].width, this.images[name].height, (centerX - cWi / 2), (centerY - cHe / 2), cWi, cHe);
+	if(!this.images[name].cache){
+	 this.images[name].cache=document.createElement('canvas');
+	 this.images[name].cache.width=cWi;
+	 this.images[name].cache.height=cHe;
+	 var nCtx=this.images[name].cache.getContext('2d');
+	 nCtx.drawImage(this.images[name], 0, 0, this.images[name].width, this.images[name].height, 0, 0, cWi, cHe);
+	}        
+
+	//this.ctx.drawImage(this.images[name].cache, 0, 0, cWi, cHe, (centerX - cWi / 2), (centerY - cHe / 2), cWi, cHe);
+	this.ctx.drawImage(this.images[name].cache, (centerX - cWi / 2), (centerY - cHe / 2));
+	
 
         if (rotation !== 0) {
             this.ctx.translate(centerX, centerY);
