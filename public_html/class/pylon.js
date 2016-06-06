@@ -16,9 +16,11 @@
  * @returns {Ball}
  */
 var Pylon = function (engine, x, y, cnt) {
+    this.type = "Pylon";
     this.engine = engine;
     this.body = Matter.Bodies.rectangle(engine.render.options.width * x, engine.render.options.height * y, 10, 10);
     Matter.Body.setStatic(this.body, true);
+    this.body.pObject = this;
     this.body.collisionFilter.mask = 2;
 
     if ((Pylon.cnt++) % 2 === 0) {

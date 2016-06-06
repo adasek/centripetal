@@ -96,7 +96,7 @@ Ball.prototype.toggleHook = function () {
         var shortestDistance = 99999999;
         for (var i = 0; i < world.bodies.length; i++) {
             var body = world.bodies[i];
-            if (body.isStatic) {
+            if (body.pObject && body.pObject.type === "Pylon") {
 
                 //Check if current speed vector is compatible with
                 //vector of rotation hooked to this body
