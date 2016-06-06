@@ -220,7 +220,6 @@ Gamestate.prototype.collisionStart = function (event) {
             Matter.World.remove(this.engine.world, bonusBody);
             bonusBody.pObject.ttl = 0; //remove bonus next frame
 
-            console.log(ballBody.pObject.type);
             if (ballBody.pObject.type === "Player") {
                 this._scoreNoTime += 500;
             }
