@@ -69,8 +69,7 @@ var Ball = function (engine, x, y, r, textures, id) {
     this.timeHooked = new Date();
     this.timeUnhooked = new Date();
 
-
-
+    this.type = "Ball";
 
 };
 
@@ -196,6 +195,8 @@ Ball.prototype.createBody = function (x, y, r) {
     Matter.Body.setMass(this.body, 5);
 
     this.body.parentBall = this;
+    this.body.pObject = this;
+
     //enemy color
     if (this.id > 0) {
         this.body.render.fillStyle = "#ff9999";

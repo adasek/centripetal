@@ -178,7 +178,10 @@ Gamestate.prototype.playerInput = function () {
 Gamestate.prototype.collisionActive = function (event) {
     // change object colours to show those in an active collision (e.g. resting contact)
     for (var i = 0; i < event.pairs.length; i++) {
+
         var pair = event.pairs[i];
+
+
         if (pair.bodyA.parentBall !== undefined && pair.bodyB.parentBall !== undefined) {
             //collision between two balls
             var depth = pair.collision.depth ? pair.collision.depth : 0.00000001;
@@ -188,6 +191,39 @@ Gamestate.prototype.collisionActive = function (event) {
             pair.bodyB.parentBall.bump(depth);
 
             //todo: if one of them player, bump Evelina
+            return;
+        }
+
+    }
+};
+
+Gamestate.prototype.collisionStart = function (event) {
+    // change object colours to show those in an active collision (e.g. resting contact)
+    for (var i = 0; i < event.pairs.length; i++) {
+
+        var pair = event.pairs[i];
+
+        //Bonus collision
+        var bonusBody = null;
+        var ballBody = null;
+        if (pair.bodyA.parentBall !== undefined && pair.bodyB.pObject && pair.bodyB.pObject.type === "Bonus") {
+            bonusBody = pair.bodyB;
+            ballBody = pair.bodyA;
+        }
+        if (pair.bodyB.parentBall !== undefined && pair.bodyA.pObject && pair.bodyA.pObject.type === "Bonus") {
+            bonusBody = pair.bodyA;
+            ballBody = pair.bodyB;
+        }
+        if (ballBody !== null && bonusBody !== null) {
+            //remove bonus
+            //todo: splice it from bonuses array
+
+            Matter.World.remove(this.engine.world, bonusBody);
+            bonusBody.pObject.ttl = 0; //remove bonus next frame
+            if (ballBody.pObject.type === "Evelina") {
+                this._scoreNoTime += 500;
+            }
+            return false; //do not proceed collision
         }
     }
 };
@@ -321,6 +357,7 @@ Gamestate.prototype.restart = function (evt) {
 
 
     Matter.Events.on(this.engine, "beforeUpdate", this.beforeUpdate.bind(this));
+    Matter.Events.on(this.engine, "collisionStart", this.collisionStart.bind(this));
     Matter.Events.on(this.engine, "collisionActive", this.collisionActive.bind(this));
     Matter.Events.on(this.engine, "afterUpdate", this.afterUpdate.bind(this));
 
