@@ -71,7 +71,14 @@ Overlay.prototype.showBeginScreen = function (gamestate) {
     html += "<h1>Rotarium</h1>";
     html += "<h2>Evelína v jednom kole</h2>";
     html += "<p>Ovládání: <em>kliknutí nebo mezerník</em></p>";
-    html += "<p>Získávej body za přežití, vyřazení nepřátel a sbírání <img src=\"gfx/bonus/book.png\" style=\"height:1.2em;vertical-align:middle\"> bonusů!</p>";
+    html += "<p>Získávej body za přežití, vyřazení nepřátel a sbírání bonusů ";
+    for (var i = 0; i < Bonus.prototype.textures.length; i++) {
+        if (i > 0) {
+            html += ",";
+        }
+        html += "<img src=\"gfx/bonus/" + Bonus.prototype.textures[i] + ".png\" class=\"bonusImage\">";
+    }
+    html += "</p>";
     html += "<a id=\"enterGameA\">Hrát!</a>";
     this.show(html);
 

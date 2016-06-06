@@ -100,3 +100,8 @@ canvas#evelina{
 li.finished{
     color:#aaaaaa;
 }
+
+.bonusImage{
+    height:1.2em;
+    vertical-align:middle
+}
