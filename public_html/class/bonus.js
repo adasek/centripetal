@@ -13,9 +13,10 @@
  * @param {Matter.Engine} engine
  * @param {number} x - x coordinate
  * @param {number} y - y coordinate 
+ * @param {number} randomNumber - number from 0..1
  * @returns {Ball}
  */
-var Bonus = function (engine, x, y) {
+var Bonus = function (engine, x, y, randomNumber) {
     this.type = "Bonus";
     this.engine = engine;
     this.body = Matter.Bodies.rectangle(engine.render.options.width * x, engine.render.options.height * y, 30, 30);
@@ -25,7 +26,13 @@ var Bonus = function (engine, x, y) {
 
     this.body.render.fillStyle = "#aaaaaa";
     this.body.render.strokeStyle = "#aaaaaa";
-    
-    this.body.render.sprite.texture = "gfx/bonus/book.png";
+
+
+    //Bonus texture
+    var randIndex = Math.floor(randomNumber * this.textures.length);
+    this.body.render.sprite.texture = "gfx/bonus/" + this.textures[randIndex % this.textures.length] + ".png";
+
 
 };
+
+Bonus.prototype.textures = ["book", "music", "pen", "phone", "pizza", "tea"];

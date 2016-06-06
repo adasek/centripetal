@@ -411,7 +411,7 @@ Gamestate.prototype.random = function () {
 };
 
 Gamestate.prototype.newBonus = function () {
-    var bonus = new Bonus(this.engine, this.random(), this.random());
+    var bonus = new Bonus(this.engine, this.random(), this.random(),this.random());
     Matter.World.add(this.engine.world, bonus.body);
     //set bonus hide 
     bonus.ttl = 200 + 250 * this.random();
