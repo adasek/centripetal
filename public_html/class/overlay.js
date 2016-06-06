@@ -44,13 +44,13 @@ Overlay.prototype.showEndScreen = function (gamestate) {
     html += "</p>";
 
     html += "<a href=\"#\" id=\"againA\">Hrát znovu</a>";
-    
+
     html += "<hr>";
     html += "<h2>Ohodnoť kurzy letního semestru a odemkni další level!</h2>";
     html += "<p><a href=\"https://cas.cuni.cz/cas/login?service=http%3A%2F%2Fhodnoceni.ff.cuni.cz%2F\" id=\"hodnotKurzy\">Hodnotit kurzy</a></p>"
     html += "<p>Evelínu čeká nová výzva dle <a href=\"http://www.ff.cuni.cz/studium/bakalarske-a-magisterske-studium/studentske-hodnoceni-vyuky/\">počtu vyplněných dotazníků</a>.</p>";
     html += "<ul>";
-    html += "<li class=\"unfinished\">&nbsp;6.000 knihomolka</li>";
+    html += "<li class=\"finished\">&nbsp;6.000 knihomolka</li>";
     html += "<li class=\"unfinished\">&nbsp;11.000 gravitační zlom</li>";
     html += "<li class=\"unfinished\">&nbsp;15.000 rotační fokus</li>";
     html += "<li class=\"unfinished\">18.000 fyzikální veletoč</li>";
@@ -71,6 +71,7 @@ Overlay.prototype.showBeginScreen = function (gamestate) {
     html += "<h1>Rotarium</h1>";
     html += "<h2>Evelína v jednom kole</h2>";
     html += "<p>Ovládání: <em>kliknutí nebo mezerník</em></p>";
+    html += "<p>Získávej body za přežití, vyřazení nepřátel a sbírání <img src=\"gfx/bonus/book.png\" style=\"height:1.2em;vertical-align:middle\"> bonusů!</p>";
     html += "<a id=\"enterGameA\">Hrát!</a>";
     this.show(html);
 
