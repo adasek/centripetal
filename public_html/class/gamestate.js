@@ -191,7 +191,6 @@ Gamestate.prototype.collisionActive = function (event) {
             pair.bodyB.parentBall.bump(depth);
 
             //todo: if one of them player, bump Evelina
-            return;
         }
 
     }
@@ -217,13 +216,15 @@ Gamestate.prototype.collisionStart = function (event) {
         if (ballBody !== null && bonusBody !== null) {
             //remove bonus
             //todo: splice it from bonuses array
-
+            Matter.Pair.setActive(pair, false);
             Matter.World.remove(this.engine.world, bonusBody);
             bonusBody.pObject.ttl = 0; //remove bonus next frame
-            if (ballBody.pObject.type === "Evelina") {
+
+            console.log(ballBody.pObject.type);
+            if (ballBody.pObject.type === "Player") {
                 this._scoreNoTime += 500;
             }
-            return false; //do not proceed collision
+
         }
     }
 };
@@ -332,6 +333,7 @@ Gamestate.prototype.restart = function (evt) {
      */
     this.player = new Ball(this.engine, 0.1, 0, 0.05, {"normal": "gfx/player.png", "bump": "gfx/player_bump.png"}, 0);
     this.player.gamestate = this;
+    this.player.type = "Player";
     this.balls.push(this.player);
 
     //Creating enemies
