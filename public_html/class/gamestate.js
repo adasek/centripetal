@@ -221,7 +221,7 @@ Gamestate.prototype.collisionStart = function (event) {
             bonusBody.pObject.ttl = 0; //remove bonus next frame
 
             if (ballBody.pObject.type === "Player") {
-                this._scoreNoTime += 500;
+                this._scoreNoTime += 1000;
             }
 
         }
