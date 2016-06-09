@@ -25,7 +25,8 @@ var Pylon = function (engine, x, y, cnt) {
 
     this.gIndicator = Matter.Bodies.circle(engine.render.options.width * x, engine.render.options.height * (y + 0.05), 3);
     this.gIndicator.collisionFilter.mask = 2;
-    Matter.Body.setMass(this.gIndicator, 200);
+    Matter.Body.setMass(this.gIndicator, 10000);
+    this.gIndicator.frictionAir = 0.1;
     this.gIndicatorRope = Matter.Constraint.create({bodyA: this.body, bodyB: this.gIndicator, stiffness: 4});
 
     if ((Pylon.cnt++) % 2 === 0) {
