@@ -51,7 +51,7 @@ Overlay.prototype.showEndScreen = function (gamestate) {
     html += "<p>Evelínu čeká nová výzva dle <a href=\"http://www.ff.cuni.cz/studium/bakalarske-a-magisterske-studium/studentske-hodnoceni-vyuky/\">počtu vyplněných dotazníků</a>.</p>";
     html += "<ul>";
     html += "<li class=\"finished\">&nbsp;6.000 knihomolka</li>";
-    html += "<li class=\"unfinished\">&nbsp;11.000 gravitační zlom</li>";
+    html += "<li class=\"finished\">&nbsp;11.000 gravitační zlom</li>";
     html += "<li class=\"unfinished\">&nbsp;15.000 rotační fokus</li>";
     html += "<li class=\"unfinished\">18.000 fyzikální veletoč</li>";
     html += "<li class=\"unfinished\">19.000 záchytná zvůle</li>";
@@ -72,13 +72,14 @@ Overlay.prototype.showBeginScreen = function (gamestate) {
     html += "<h2>Evelína v jednom kole</h2>";
     html += "<p>Ovládání: <em>kliknutí nebo mezerník</em></p>";
     html += "<p>Získávej body za přežití, vyřazení nepřátel a sbírání bonusů ";
-    for (var i = 0; i < Bonus.prototype.textures.length; i++) {
-        if (i > 0) {
+    for (var i = 1; i < Bonus.prototype.textures.length; i++) {
+        if (i > 1) {
             html += ",";
         }
         html += "<img src=\"gfx/bonus/" + Bonus.prototype.textures[i] + ".png\" class=\"bonusImage\">";
     }
     html += "</p>";
+    html += "<p><img src=\"gfx/bonus/" + Bonus.prototype.textures[0] + ".png\" class=\"bonusImage\"> náhodně změní přitažlivost</p>"
     html += "<a id=\"enterGameA\">Hrát!</a>";
     this.show(html);
 
