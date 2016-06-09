@@ -433,11 +433,10 @@ Gamestate.prototype.newBonus = function () {
 };
 
 Gamestate.prototype.changeGravity = function () {
-    var x = Math.random();
-    var y = 1 - x;
-
-    this.engine.world.gravity.x = x*1.2;
-    this.engine.world.gravity.y = y*1.2;
+    var x = (Math.random() * 2) - 1;
+    var y = Math.sign((Math.random() * 2) - 1) * Math.sqrt(1.5 - x * x);
+    this.engine.world.gravity.x = x;
+    this.engine.world.gravity.y = y;
 
     this.gravityChangeTicks = 1000;
     //changeGravity
