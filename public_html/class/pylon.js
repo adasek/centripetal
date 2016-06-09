@@ -23,6 +23,11 @@ var Pylon = function (engine, x, y, cnt) {
     this.body.pObject = this;
     this.body.collisionFilter.mask = 2;
 
+    this.gIndicator = Matter.Bodies.circle(engine.render.options.width * x, engine.render.options.height * (y + 0.05), 3);
+    this.gIndicator.collisionFilter.mask = 2;
+    Matter.Body.setMass(this.gIndicator, 200);
+    this.gIndicatorRope = Matter.Constraint.create({bodyA: this.body, bodyB: this.gIndicator, stiffness: 4});
+
     if ((Pylon.cnt++) % 2 === 0) {
         this.body.render.fillStyle = "#002d56";
         this.body.render.strokeStyle = "#002d56";

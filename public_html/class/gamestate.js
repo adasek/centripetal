@@ -354,6 +354,10 @@ Gamestate.prototype.restart = function (evt) {
     // add all of the bodies to the world
     for (var i = 0; i < this.pylons.length; i++) {
         Matter.World.add(this.engine.world, this.pylons[i].body);
+        if (i === this.pylons.length - 1) {
+            Matter.World.add(this.engine.world, this.pylons[i].gIndicator);
+            Matter.World.add(this.engine.world, this.pylons[i].gIndicatorRope);
+        }
     }
     this.engine.world.gravity.scale = 0.0005;
 
