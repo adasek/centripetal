@@ -32,7 +32,20 @@ var Bonus = function (engine, x, y, randomNumber) {
     var randIndex = Math.floor(randomNumber * this.textures.length);
     this.body.render.sprite.texture = "gfx/bonus/" + this.textures[randIndex % this.textures.length] + ".png";
 
+    if (randIndex === 0) {
+        //special: gravity changer
+        this.eaten = function (ball, gamestate) {
+            gamestate.changeGravity();
+        }.bind(this);
+    } else {
+        //ordinary bonus = eat and get score
+        this.eaten = function (ball, gamestate) {
+            if (ball.type === "Player") {
+                gamestate._scoreNoTime += 1000;
+            }
+        }.bind(this);
+    }
 
 };
 
-Bonus.prototype.textures = ["book", "music", "pen", "phone", "pizza", "tea"];
+Bonus.prototype.textures = ["circular", "book", "music", "pen", "phone", "pizza", "tea"];

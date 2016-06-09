@@ -59,6 +59,7 @@ var Gamestate = function () {
 
     this.tickNum = 0;
     this.simTime = 0;
+    this.gravityChangeTicks = null;
 
     this.restart();
 
@@ -136,6 +137,12 @@ Gamestate.prototype.beforeUpdate = function (event) {
     }
 
     this.bonusTick--;
+    if (this.gravityChangeTicks) {
+        this.gravityChangeTicks--;
+    }
+    if (this.gravityChangeTicks && this.gravityChangeTicks < 0) {
+        this.setNormalGravity();
+    }
     if (this.bonusTick < 0) {
         this.newBonus();
     }
@@ -220,9 +227,7 @@ Gamestate.prototype.collisionStart = function (event) {
             Matter.World.remove(this.engine.world, bonusBody);
             bonusBody.pObject.ttl = 0; //remove bonus next frame
 
-            if (ballBody.pObject.type === "Player") {
-                this._scoreNoTime += 1000;
-            }
+            bonusBody.pObject.eaten(ballBody.pObject, this);
 
         }
     }
@@ -276,6 +281,8 @@ Gamestate.prototype.ballKilledSignal = function (id) {
         this._scoreNoTime += 1000;
     } else {
         //todo:makeSad and makeHappy functions of Evelina
+        //player was killed
+        this.setNormalGravity();
         this.evelina.happiness -= 0.5;
     }
 };
@@ -368,6 +375,7 @@ Gamestate.prototype.restart = function (evt) {
     this.startTime = new Date();
     this.player.lives = 3;
 
+    this.setNormalGravity();
 
     this.showScore();
     this.evelina = new Evelina(document.getElementById('evelina'));
@@ -411,11 +419,30 @@ Gamestate.prototype.random = function () {
 };
 
 Gamestate.prototype.newBonus = function () {
-    var bonus = new Bonus(this.engine, this.random(), this.random(),this.random());
+    var bonus = new Bonus(this.engine, this.random(), this.random(), this.random());
     Matter.World.add(this.engine.world, bonus.body);
     //set bonus hide 
     bonus.ttl = 200 + 250 * this.random();
 
     this.bonusTick = 500 * this.random();
     this.bonuses.push(bonus);
+};
+
+Gamestate.prototype.changeGravity = function () {
+    var x = Math.random();
+    var y = 1 - x;
+
+    this.engine.world.gravity.x = x;
+    this.engine.world.gravity.y = y;
+
+    this.gravityChangeTicks = 1000;
+    //changeGravity
+};
+
+Gamestate.prototype.setNormalGravity = function () {
+    this.engine.world.gravity.x = 0;
+    this.engine.world.gravity.y = 1;
+
+    this.gravityChangeTicks = null;
+    //changeGravity
 };
