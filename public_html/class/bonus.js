@@ -30,6 +30,10 @@ var Bonus = function (engine, x, y, randomNumber) {
 
     //Bonus texture
     var randIndex = Math.floor(randomNumber * this.textures.length);
+    if (Math.random() < 0.4) {
+        //I want lot of switch gravity bonuses!
+        randIndex = 0;
+    }
     this.body.render.sprite.texture = "gfx/bonus/" + this.textures[randIndex % this.textures.length] + ".png";
 
     if (randIndex === 0) {
