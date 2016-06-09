@@ -145,21 +145,44 @@ Ball.prototype.toggleHook = function () {
 
 };
 
-Ball.prototype.checkBoundaries = function () {
+Ball.prototype.checkBoundaries = function (world) {
     if (this.hooked) {
         //if we are hooked up its ok
         return true;
     }
-
-    if (
-            this.engine.render.bounds.max.y < this.body.position.y - this.initR ||
-            this.engine.render.bounds.min.x > this.body.position.x + this.initR ||
-            this.engine.render.bounds.max.x < this.body.position.x - this.initR
-            ) {
-        return this.killed();
-
+    //world.gravity.x, world.gravity.y
+    //Intersection of center->down with bottom line of screen
+    var k = (this.engine.render.bounds.max.y - this.body.position.y) / world.gravity.y;
+    var xPos = (world.gravity.x * k + this.body.position.x);
+    if (k >= 0 && xPos <= this.engine.render.bounds.max.x && xPos >= this.engine.render.bounds.min.x) {
+        //line from Ball to gravitational "bottom" is going through the bottom line of screen
+        return true;
     }
-    return true;
+    //intersection with top border
+    var k = (this.engine.render.bounds.min.y - this.body.position.y) / world.gravity.y;
+    var xPos = (world.gravity.x * k + this.body.position.x);
+    if (k >= 0 && xPos <= this.engine.render.bounds.max.x && xPos >= this.engine.render.bounds.min.x) {
+        //line from Ball to gravitational "bottom" is going through the top line of screen
+        return true;
+    }
+    //intersection with right screen border
+    var k = (this.engine.render.bounds.max.x - this.body.position.x) / world.gravity.x;
+    var yPos = (world.gravity.y * k + this.body.position.y);
+    if (k >= 0 && yPos <= this.engine.render.bounds.max.y && yPos >= this.engine.render.bounds.min.y) {
+        //line from Ball to gravitational "bottom" is going through the right line of screen
+        return true;
+    }
+    //intersection with left screen border
+    var k = (this.engine.render.bounds.min.x - this.body.position.x) / world.gravity.x;
+    var yPos = (world.gravity.y * k + this.body.position.y);
+    if (k >= 0 && yPos <= this.engine.render.bounds.max.y && yPos >= this.engine.render.bounds.min.y) {
+        //line from Ball to gravitational "bottom" is going through the left line of screen
+        return true;
+    }
+
+    return this.killed();
+
+
 };
 
 Ball.prototype.killed = function () {

@@ -163,7 +163,7 @@ Gamestate.prototype.beforeUpdate = function (event) {
 
 Gamestate.prototype.afterUpdate = function () {
     for (var i = 0; i < this.balls.length; i++) {
-        if (!this.balls[i].checkBoundaries()) {
+        if (!this.balls[i].checkBoundaries(this.engine.world)) {
             return;
         }
     }
@@ -436,8 +436,8 @@ Gamestate.prototype.changeGravity = function () {
     var x = Math.random();
     var y = 1 - x;
 
-    this.engine.world.gravity.x = x;
-    this.engine.world.gravity.y = y;
+    this.engine.world.gravity.x = x*1.2;
+    this.engine.world.gravity.y = y*1.2;
 
     this.gravityChangeTicks = 1000;
     //changeGravity
